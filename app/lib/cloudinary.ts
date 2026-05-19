@@ -1,6 +1,4 @@
 import { v2 as cloudinary } from 'cloudinary'
-import { error } from 'console';
-import { Upload } from 'lucide-react';
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,

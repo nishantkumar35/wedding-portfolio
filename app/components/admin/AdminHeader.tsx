@@ -40,8 +40,7 @@ export function AdminHeader({ session }: AdminHeaderProps) {
         </Button>
 
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-accent/50 transition-colors">
+          <DropdownMenuTrigger render={<button className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-accent/50 transition-colors" />}>
               <Avatar className="w-8 h-8 border border-primary/30">
                 <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">
                   {initials}
@@ -53,7 +52,6 @@ export function AdminHeader({ session }: AdminHeaderProps) {
                 </p>
                 <p className="text-[10px] text-muted-foreground mt-0.5">Administrator</p>
               </div>
-            </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-52 bg-card border-border">
             <DropdownMenuItem className="flex items-center gap-2 text-muted-foreground cursor-pointer">

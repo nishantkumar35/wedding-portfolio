@@ -9,10 +9,19 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url)
     const albumId = searchParams.get('albumId')
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '10') // max 10 photos
+    const skip = (page - 1) * limit
+
     await connectDB()
     const query = albumId ? { albumId } : {}
-    const photos = await Photo.find(query).sort({ createdAt: -1 })
-    return NextResponse.json(photos)
+    
+    const [photos, total] = await Promise.all([
+      Photo.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+      Photo.countDocuments(query)
+    ])
+    
+    return NextResponse.json({ photos, total, page, totalPages: Math.ceil(total / limit) })
   } catch (err) {
     console.error('[GET /api/admin/photos]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

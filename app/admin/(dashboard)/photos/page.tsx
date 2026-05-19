@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
 import {
-  Upload, Trash2, Images, Loader2, Search, Filter, X, ChevronDown
+  Upload, Trash2, Images, Loader2, Search, Filter, X, ChevronDown, ChevronLeft, ChevronRight
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -48,17 +48,25 @@ export default function PhotosPage() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const fileRef = useRef<HTMLInputElement>(null)
 
-  async function fetchData() {
+  // Pagination
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+
+  async function fetchData(p = 1, albumFilter?: string) {
     setLoading(true)
     try {
+      const filterAlbum = albumFilter ?? selectedAlbum
+      const albumParam = filterAlbum !== 'all' ? `&albumId=${filterAlbum}` : ''
       const [albumsRes, photosRes] = await Promise.all([
         fetch('/api/admin/album'),
-        fetch('/api/admin/photos'),
+        fetch(`/api/admin/photos?page=${p}${albumParam}`),
       ])
       const albumsData = await albumsRes.json()
       const photosData = await photosRes.json()
       setAlbums(Array.isArray(albumsData) ? albumsData : [])
-      setPhotos(Array.isArray(photosData) ? photosData : [])
+      setPhotos(photosData.photos || [])
+      setTotalPages(photosData.totalPages || 1)
+      setPage(p)
     } catch {
       toast.error('Failed to load data')
     } finally {
@@ -67,6 +75,11 @@ export default function PhotosPage() {
   }
 
   useEffect(() => { fetchData() }, [])
+
+  function handleAlbumFilter(val: string | null) {
+    setSelectedAlbum(val || 'all')
+    fetchData(1, val || 'all')
+  }
 
   function handleFiles(picked: FileList | null) {
     if (!picked) return
@@ -100,7 +113,7 @@ export default function PhotosPage() {
       }
       toast.success(`${files.length} photo(s) uploaded!`)
       setFiles([]); setPreviews([]); setCaption(''); setUploadAlbum(''); setOpenUpload(false)
-      fetchData()
+      fetchData(page)
     } catch (e: any) {
       toast.error(e.message || 'Upload failed')
     } finally {
@@ -117,7 +130,7 @@ export default function PhotosPage() {
       })
       if (!res.ok) throw new Error()
       toast.success('Photo deleted')
-      setPhotos(p => p.filter(x => x._id !== id))
+      fetchData(page)
     } catch {
       toast.error('Failed to delete photo')
     } finally {
@@ -125,11 +138,10 @@ export default function PhotosPage() {
     }
   }
 
-  const filtered = photos.filter(p => {
-    const albumMatch = selectedAlbum === 'all' || p.albumId === selectedAlbum
-    const searchMatch = p.caption.toLowerCase().includes(search.toLowerCase())
-    return albumMatch && searchMatch
-  })
+  // Client-side caption search on top of server-side album filter + pagination
+  const filtered = photos.filter(p =>
+    p.caption.toLowerCase().includes(search.toLowerCase())
+  )
 
   const albumName = (id: string) => albums.find(a => a._id === id)?.name ?? 'Unknown'
 
@@ -148,11 +160,9 @@ export default function PhotosPage() {
         </div>
 
         <Dialog open={openUpload} onOpenChange={setOpenUpload}>
-          <DialogTrigger asChild>
-            <Button className="gap-2 bg-primary hover:bg-primary/90 rounded-xl">
+          <DialogTrigger render={<Button className="gap-2 bg-primary hover:bg-primary/90 rounded-xl" />}>
               <Upload className="w-4 h-4" />
               Upload Photos
-            </Button>
           </DialogTrigger>
           <DialogContent className="bg-card border-border max-w-lg">
             <DialogHeader>
@@ -161,7 +171,7 @@ export default function PhotosPage() {
             <form onSubmit={handleUpload} className="space-y-4 mt-2">
               <div className="space-y-2">
                 <Label className="text-muted-foreground">Album</Label>
-                <Select value={uploadAlbum} onValueChange={setUploadAlbum} required>
+                <Select value={uploadAlbum} onValueChange={(val) => setUploadAlbum(val || '')} required>
                   <SelectTrigger className="bg-muted/50 border-border">
                     <SelectValue placeholder="Select album" />
                   </SelectTrigger>
@@ -260,7 +270,7 @@ export default function PhotosPage() {
             className="pl-9 bg-card border-border"
           />
         </div>
-        <Select value={selectedAlbum} onValueChange={setSelectedAlbum}>
+        <Select value={selectedAlbum} onValueChange={handleAlbumFilter}>
           <SelectTrigger className="w-48 bg-card border-border">
             <Filter className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
             <SelectValue placeholder="Filter by album" />
@@ -331,6 +341,31 @@ export default function PhotosPage() {
               </div>
             ))}
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-4 mt-6">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                disabled={page <= 1}
+                onClick={() => fetchData(page - 1)}
+              >
+                <ChevronLeft className="w-4 h-4 mr-1" /> Prev
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                Page {page} of {totalPages}
+              </span>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                disabled={page >= totalPages}
+                onClick={() => fetchData(page + 1)}
+              >
+                Next <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </div>
+          )}
         </>
       )}
 

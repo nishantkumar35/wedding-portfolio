@@ -4,11 +4,20 @@ import { Video } from '@/models/Video'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url)
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '10') // max 10 videos
+    const skip = (page - 1) * limit
+
     await connectDB()
-    const videos = await Video.find().sort({ order: 1, createdAt: -1 })
-    return NextResponse.json(videos)
+    const [videos, total] = await Promise.all([
+      Video.find().sort({ order: 1, createdAt: -1 }).skip(skip).limit(limit).lean(),
+      Video.countDocuments()
+    ])
+    
+    return NextResponse.json({ videos, total, page, totalPages: Math.ceil(total / limit) })
   } catch (err) {
     console.error('[GET /api/admin/videos]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

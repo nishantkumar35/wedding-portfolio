@@ -7,7 +7,7 @@ import { authOptions } from '@/lib/auth'
 export async function GET() {
   try {
     await connectDB()
-    const albums = await Album.find().sort({ createdAt: -1 })
+    const albums = await Album.find().sort({ createdAt: -1 }).lean()
     return NextResponse.json(albums)
   } catch (err) {
     console.error('[GET /api/admin/album]', err)

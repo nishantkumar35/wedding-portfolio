@@ -8,7 +8,7 @@ import { authOptions } from '@/lib/auth'
 export async function GET() {
   try {
     await connectDB()
-    const highlights = await Highlight.find().sort({ order: 1, createdAt: -1 })
+    const highlights = await Highlight.find().sort({ order: 1, createdAt: -1 }).lean()
     return NextResponse.json(highlights)
   } catch (err) {
     console.error('[GET /api/admin/highlights]', err)

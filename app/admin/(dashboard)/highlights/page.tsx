@@ -193,11 +193,9 @@ export default function HighlightsPage() {
           <p className="text-muted-foreground text-sm mt-1">Featured wedding stories with mixed media</p>
         </div>
         <Dialog open={openCreate} onOpenChange={setOpenCreate}>
-          <DialogTrigger asChild>
-            <Button className="gap-2 bg-primary hover:bg-primary/90 rounded-xl">
+          <DialogTrigger render={<Button className="gap-2 bg-primary hover:bg-primary/90 rounded-xl" />}>
               <Plus className="w-4 h-4" />
               New Highlight
-            </Button>
           </DialogTrigger>
           <DialogContent className="bg-card border-border">
             <DialogHeader>
@@ -264,10 +262,12 @@ export default function HighlightsPage() {
           ) : (
             <div className="space-y-2">
               {filtered.map(h => (
-                <button
+                <div
                   key={h._id}
                   onClick={() => setSelected(h)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all duration-200 ${selected?._id === h._id ? 'bg-primary/10 border-primary/30 shadow-sm' : 'bg-card border-border hover:border-primary/20 hover:bg-muted/30'}`}
+                  role="button"
+                  tabIndex={0}
+                  className={`w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all duration-200 cursor-pointer ${selected?._id === h._id ? 'bg-primary/10 border-primary/30 shadow-sm' : 'bg-card border-border hover:border-primary/20 hover:bg-muted/30'}`}
                 >
                   <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-muted/40">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -284,7 +284,7 @@ export default function HighlightsPage() {
                     </Button>
                     <ChevronRight className="w-4 h-4 text-muted-foreground" />
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           )}
@@ -310,18 +310,16 @@ export default function HighlightsPage() {
                 </div>
                 <div className="absolute top-3 right-3">
                   <Dialog open={openAdd} onOpenChange={setOpenAdd}>
-                    <DialogTrigger asChild>
-                      <Button size="sm" className="gap-1.5 bg-white/20 hover:bg-white/30 text-white border border-white/20 backdrop-blur-sm rounded-xl">
+                    <DialogTrigger render={<Button size="sm" className="gap-1.5 bg-white/20 hover:bg-white/30 text-white border border-white/20 backdrop-blur-sm rounded-xl" />}>
                         <Plus className="w-3.5 h-3.5" />
                         Add Item
-                      </Button>
                     </DialogTrigger>
                     <DialogContent className="bg-card border-border">
                       <DialogHeader>
                         <DialogTitle className="text-foreground">Add Item to Highlight</DialogTitle>
                       </DialogHeader>
                       <form onSubmit={handleAddItem} className="space-y-4 mt-2">
-                        <Tabs value={itemType} onValueChange={v => setItemType(v as any)}>
+                        <Tabs value={itemType} onValueChange={(v) => setItemType((v as any) || 'photo')}>
                           <TabsList className="bg-muted/50">
                             <TabsTrigger value="photo" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                               <ImageIcon className="w-3.5 h-3.5" /> Photo
