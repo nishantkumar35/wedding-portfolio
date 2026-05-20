@@ -1,12 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface Photo {
   _id: string
   url: string
+  thumbnailUrl?: string
+  blurDataUrl?: string
   caption?: string
 }
 
@@ -57,11 +60,14 @@ export function GallerySlider({ initialPhotos }: { initialPhotos: Photo[] }) {
             key={photo._id} 
             className={`min-w-[300px] h-[400px] rounded-xl overflow-hidden relative transition-all duration-500 ${index === currentIndex ? 'opacity-100 scale-100' : 'opacity-70 scale-95'}`}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={photo.url} 
+            <Image 
+              src={photo.thumbnailUrl || photo.url} 
               alt={photo.caption || 'Captured Moment'} 
-              className="w-full h-full object-cover"
+              fill
+              sizes="300px"
+              placeholder={photo.blurDataUrl ? 'blur' : 'empty'}
+              blurDataURL={photo.blurDataUrl}
+              className="object-cover"
             />
           </div>
         ))}

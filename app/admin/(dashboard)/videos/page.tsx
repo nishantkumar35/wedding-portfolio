@@ -68,10 +68,9 @@ export default function VideosPage() {
 
   useEffect(() => { fetchVideos() }, [])
 
-  // Auto-extract youtubeId from URL if user pastes a full URL
   function handleYoutubeIdChange(val: string) {
     // Basic regex to extract from various youtube URL formats
-    const match = val.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/)
+    const match = val.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^&?/#]+)/)
     if (match && match[1]) {
       setYoutubeId(match[1])
     } else {

@@ -7,6 +7,7 @@ import { Album } from '@/models/Album'
 import { GalleryApp } from '@/components/GalleryApp'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
+import Link from 'next/link'
 
 export const revalidate = 60
 
@@ -43,7 +44,7 @@ export default async function GalleryPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">
-      <Navbar />
+      <Link href="/" className="block py-4 px-6 bg-[#333C43] text-white text-sm uppercase tracking-wide font-medium">Back</Link>
       <main className="pt-8 pb-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
           <Suspense fallback={

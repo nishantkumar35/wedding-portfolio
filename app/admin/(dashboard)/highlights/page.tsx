@@ -353,7 +353,20 @@ export default function HighlightsPage() {
                           <TabsContent value="youtube" className="space-y-3 mt-3">
                             <div className="space-y-2">
                               <Label className="text-muted-foreground">YouTube Video ID</Label>
-                              <Input value={youtubeId} onChange={e => setYoutubeId(e.target.value)} placeholder="dQw4w9WgXcQ" className="bg-muted/50 border-border font-mono" />
+                              <Input 
+                                value={youtubeId} 
+                                onChange={e => {
+                                  const val = e.target.value;
+                                  const match = val.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^&?/#]+)/);
+                                  if (match && match[1]) {
+                                    setYoutubeId(match[1]);
+                                  } else {
+                                    setYoutubeId(val);
+                                  }
+                                }} 
+                                placeholder="dQw4w9WgXcQ or full URL" 
+                                className="bg-muted/50 border-border font-mono" 
+                              />
                               <p className="text-xs text-muted-foreground">From: youtube.com/watch?v=<strong>VIDEO_ID</strong></p>
                             </div>
                             <div className="space-y-2">

@@ -13,8 +13,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Johanna Reed | Wedding Photographer',
-  description: 'Capturing timeless love stories. Elegant wedding photography by Johanna Reed.',
+  title: 'AARSH | Wedding Videography',
+  description: 'Capturing timeless love stories. Elegant wedding videography by AARSH.',
 }
 
 export default function RootLayout({

@@ -51,10 +51,10 @@ export function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex flex-col">
               <span className="font-serif text-2xl md:text-[28px] font-bold tracking-wide text-[#333C43] uppercase leading-none">
-                JOHANNA REED
+                AARSH
               </span>
               <span className="text-[10px] tracking-widest text-[#8697A0] italic mt-1 font-serif">
-                Wedding Photographer
+                Wedding Videography
               </span>
             </Link>
 
