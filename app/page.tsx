@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CircularGallery from "@/components/CircularGallery";
+import Image from "next/image";
 
 export const revalidate = 3600;
 
@@ -35,27 +36,31 @@ export default async function Home() {
 
       <main>
         {/* HERO SECTION */}
-        <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 px-6 overflow-hidden">
+        <section className="relative pt-8 pb-8 md:pt-10 md:pb-10 px-6 overflow-hidden">
           {/* Split Background */}
-          <div className="absolute inset-y-0 left-0 w-full md:w-[45%] bg-white z-0" />
-          <div className="absolute inset-y-0 right-0 w-full md:w-[55%] bg-[#FAF9F6] z-0" />
+          <div className="absolute inset-y-0 left-0 w-full md:w-[30%] bg-[#C4D1D4] z-0" />
+          <div className="absolute inset-y-0 right-0 w-full md:w-[70%] bg-[#FAF9F6] z-0" />
 
           <div className="container mx-auto max-w-7xl flex flex-col md:flex-row items-center gap-12 md:gap-20 relative z-10">
             <div className="w-full md:w-1/2 aspect-[4/5] bg-[#C4D1D4] rounded-tl-[60px] rounded-br-[60px] rounded-tr-xl rounded-bl-xl overflow-hidden relative shadow-md">
-              <img
-                src="https://i.ibb.co/yctfgMYC/Whats-App-Image-2026-04-20-at-7-51-44-PM.jpg"
+              <Image
+                src="/assets/hero.jpeg"
                 alt="Whats App Image 2026 04 20 at 7 51 44 PM"
                 className="w-full h-full object-cover rounded-[inherit]"
+                fill
               />
             </div>
 
             <div className="w-full md:w-1/2 space-y-6 md:pl-8">
-              <h1 className="font-serif text-5xl md:text-[72px] font-bold leading-[1.1] text-[#333C43]">
-                <span className="italic font-light">Capturing</span>
+              <h1 className="font-serif  font-bold leading-[1.1] text-[#333C43]">
+                <span className="text-5xl md:text-[60px]">
+                  <span className="italic font-light">Capturing </span>
+                  Timeless
+                </span>
                 <br />
-                Timeless
-                <br />
-                Love <span className="italic font-light">Stories</span>
+                <span className="text-4xl text-[40px] font-light">
+                  Love <span className="italic font-light">Stories</span>
+                </span>
               </h1>
               <p className="text-[#8697A0] text-lg max-w-md font-light tracking-wide pt-2">
                 Elegant Wedding Photography
@@ -65,9 +70,10 @@ export default async function Home() {
               <div className="pt-6">
                 <Button
                   variant="outline"
-                  className="rounded-none border-[#333C43] text-[#333C43] hover:bg-[#333C43] hover:text-white px-8 py-5 text-[10px] uppercase tracking-widest transition-colors bg-transparent h-auto"
+                  className="rounded-none border-[#333C43] text-[#333C43] hover:bg-[#333C43] hover:text-white px-8 py-3 text-md uppercase tracking-widest transition-colors bg-transparent h-auto"
                 >
-                  Get in Touch <span className="ml-2 tracking-normal">»</span>
+                  Get in Touch{" "}
+                  <span className="ml-2 text-md tracking-normal">»</span>
                 </Button>
               </div>
             </div>
@@ -77,11 +83,11 @@ export default async function Home() {
         {/* STORYTELLER (ABOUT) SECTION */}
         <section
           id="about"
-          className="bg-[#2D3539] text-white py-24 px-6 border-b border-[#2D3539]"
+          className="bg-[#2D3539] text-white py-10 px-5 border-b border-[#2D3539]"
         >
-          <div className="container mx-auto max-w-5xl">
+          <div className="container mx-auto">
             <div className="flex flex-col md:flex-row gap-12 md:gap-20 mb-20 items-center">
-              <div className="w-full md:w-5/12 text-left md:text-center md:pr-12 md:border-r border-white/20">
+              <div className="w-full md:w-5/12 text-center md:pr-12 md:border-r border-white/20">
                 <h2 className="font-serif text-4xl md:text-[54px] leading-tight italic font-light text-white/90">
                   Your
                   <br />
@@ -92,8 +98,8 @@ export default async function Home() {
                   lens
                 </h2>
               </div>
-              <div className="w-full md:w-7/12">
-                <p className="text-white/70 text-sm md:text-sm leading-loose max-w-lg font-light tracking-wide">
+              <div className="w-full md:w-8/12">
+                <p className="text-white/70 text-sm md:text-sm leading-loose font-light tracking-wide">
                   Hi, I'm Aashis — a passionate wedding videographer dedicated
                   to capturing authentic, heartfelt moments. With a love for
                   natural light, elegant details, and genuine emotions, I strive
@@ -108,26 +114,27 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
                 {
-                  url: "https://res.cloudinary.com/daryzime9/image/upload/v1761317939/wedding-portfolio/photos/ab4d25baa838bd529925eaf910f85e77_gsxbqg.jpg",
+                  url: "/assets/hero1.jpg",
                 },
                 {
-                  url: "https://res.cloudinary.com/daryzime9/image/upload/v1761318015/wedding-portfolio/photos/9fabdfd574bb5d7ff771ea43b2aa6e82_g5dkiv.jpg",
+                  url: "/assets/hero2.jpg",
                 },
                 {
-                  url: "https://res.cloudinary.com/daryzime9/image/upload/v1761318429/wedding-portfolio/photos/e6886ce72000a0b186f88244b058be36_fduzpe.jpg",
+                  url: "/assets/hero3.jpg",
                 },
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="aspect-[4/3] bg-[#7B8B94] rounded-tl-[40px] rounded-br-[40px] rounded-tr-xl rounded-bl-xl overflow-hidden"
+                  className="aspect-[4/3] bg-[#7B8B94] rounded-tl-[40px] rounded-br-[40px] rounded-tr-xl rounded-bl-xl overflow-hidden relative"
                 >
-                  <img
+                  <Image
                     src={item.url}
                     alt={`gallery-${i}`}
                     className="w-full h-full object-cover"
+                    fill
                   />
                 </div>
               ))}
@@ -136,7 +143,7 @@ export default async function Home() {
         </section>
 
         {/* SERVICES SECTION */}
-        <section id="services" className="py-24 px-6 bg-[#FAF9F6]">
+        <section id="services" className="py-10 px-6 bg-[#FAF9F6]">
           <div className="container mx-auto max-w-7xl">
             <div className="text-center mb-16 space-y-4">
               <h2 className="font-serif text-4xl md:text-[44px] text-[#333C43] tracking-wide">
@@ -154,22 +161,27 @@ export default async function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               {[
                 {
+                  url: "/assets/Engagement.jpg",
                   title: "Engagement\nSessions",
                   desc: "Celebrate your love with a relaxed, intimate photo session at a location special to you.",
                 },
                 {
+                  url: "/assets/Haldi.jpeg",
+                  title: "Haldi & Mehndi\nCeremonies",
+                  desc: "Capture the vibrant colors, joyful traditions, and emotional moments of your pre-wedding celebrations with authentic storytelling photography.",
+                },
+                {
+                  url: "/assets/Wedding.jpg",
                   title: "Wedding Day\nCoverage",
                   desc: "Comprehensive photography packages to beautifully document every moment — from the first look to the last dance.",
                 },
                 {
-                  title: "Elopements",
-                  desc: "Small, meaningful ceremonies deserve to be captured with the same elegance and emotion.",
-                },
-                {
+                  url: "/assets/Destination.jpg",
                   title: "Destination\nWeddings",
                   desc: "Wherever your love takes you, I'm ready to travel and tell your story with breathtaking images.",
                 },
                 {
+                  url: "/assets/Albums.jpeg",
                   title: "Heirloom Albums",
                   desc: "Timeless, handcrafted albums that preserve your wedding memories for generations.",
                 },
@@ -178,7 +190,14 @@ export default async function Home() {
                   key={i}
                   className="bg-white rounded-tl-[40px] rounded-br-[40px] rounded-tr-md rounded-bl-md overflow-hidden flex flex-col shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] h-full"
                 >
-                  <div className="w-full aspect-[4/5] bg-[#E3E8EA]" />
+                  <div className="w-full h-50  md:h-70 aspect-[4/5] bg-[#E3E8EA] relative" >
+                    <Image
+                      src={service.url}
+                      alt={`service-${i}`}
+                      className="w-full h-full object-cover"
+                      fill
+                    />
+                  </div>
                   <div className="p-6 flex flex-col flex-grow items-center text-center">
                     <h3 className="font-serif text-[17px] text-[#333C43] mb-3 whitespace-pre-line italic font-medium">
                       {service.title}
@@ -196,7 +215,7 @@ export default async function Home() {
         {/* CAPTURED MOMENTS SECTION */}
         <section
           id="portfolio"
-          className="py-24 px-6 bg-[#C4D1D4] overflow-hidden"
+          className="py-10 px-6 bg-[#C4D1D4] overflow-hidden"
         >
           <div className="container mx-auto max-w-7xl">
             <div className="text-center mb-5 space-y-3">
@@ -226,17 +245,17 @@ export default async function Home() {
           <div className="flex justify-center ">
             <Button
               variant="outline"
-              className="rounded-none border-[#333C43] text-[#333C43] hover:bg-[#333C43] hover:text-white px-8 py-5 text-[10px] uppercase tracking-widest transition-colors bg-transparent h-auto"
+              className="rounded-none border-[#333C43] text-[#333C43] hover:bg-[#333C43] hover:text-white px-10 md:px-15 py-3 text-[15px] uppercase tracking-widest transition-colors bg-transparent h-auto"
             >
               <Link href="/gallery" className="flex items-center">
-                View Gallery <span className="ml-2 tracking-normal">»</span>
+                View Gallery <span className="ml-2 tracking-normal text-[15px]">»</span>
               </Link>
             </Button>
           </div>
         </section>
 
         {/* PRICING PACKAGES SECTION */}
-        <section id="pricing" className="py-24 px-6 bg-[#FAF9F6]">
+        <section id="pricing" className="py-10 px-6 bg-[#FAF9F6]">
           <div className="container mx-auto max-w-5xl">
             <div className="text-center mb-16 space-y-4">
               <h2 className="font-serif text-4xl md:text-[44px] text-[#333C43] tracking-wide">
@@ -328,10 +347,17 @@ export default async function Home() {
         </section>
 
         {/* CONTACT SECTION */}
-        <section id="contact" className="py-24 px-6 bg-[#C4D1D4]">
+        <section id="contact" className="py-10 px-6 bg-[#C4D1D4]">
           <div className="container mx-auto max-w-5xl flex flex-col md:flex-row shadow-2xl bg-white rounded-sm overflow-hidden">
             {/* Left side Image placeholder */}
-            <div className="w-full md:w-[45%] bg-[#7B8B94] min-h-[400px] md:min-h-full" />
+            <div className="w-full md:w-[45%] bg-[#7B8B94] min-h-[400px] md:min-h-full relative">
+              <Image
+                src="/assets/form.jpg"
+                alt=""
+                className="w-full h-full object-cover"
+                fill
+              />
+            </div>
 
             {/* Right side form */}
             <div className="w-full md:w-[55%] p-12 md:p-14 lg:p-16">
@@ -444,7 +470,7 @@ export default async function Home() {
                   details you'd like to share!
                 </p>
 
-                <Button className="w-full bg-[#F4F3ED] text-[#333C43] hover:bg-[#EAE8E0] rounded-none py-6 uppercase tracking-widest text-[10px] font-semibold transition-colors shadow-none border-none h-auto">
+                <Button className="w-full bg-[#F4F3ED] border-2 border-[#333C43] text-[#333C43] hover:bg-[#333C43] hover:text-[#F4F3ED] rounded-none py-6 uppercase tracking-widest text-[10px] font-semibold transition-colors shadow-none h-auto">
                   Send Inquiry
                 </Button>
               </form>

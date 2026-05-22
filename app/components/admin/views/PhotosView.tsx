@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
+import Image from 'next/image'
 import {
   Upload, Trash2, Images, Loader2, Search, Filter, X, ChevronDown, ChevronLeft, ChevronRight
 } from 'lucide-react'
@@ -28,11 +29,12 @@ interface Photo {
   albumId: string
   url: string
   thumbnailUrl: string
+  blurDataUrl?: string
   caption: string
   createdAt: string
 }
 
-export default function PhotosPage() {
+export function PhotosView() {
   const [albums, setAlbums] = useState<Album[]>([])
   const [photos, setPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(true)
@@ -309,12 +311,15 @@ export default function PhotosPage() {
                 className="group relative aspect-square rounded-xl overflow-hidden bg-muted/30 border border-border hover:border-primary/30 transition-all duration-200 animate-fade-in-up"
                 style={{ animationDelay: `${Math.min(i * 30, 300)}ms` }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={photo.thumbnailUrl || photo.url}
                   alt={photo.caption || 'Photo'}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading={i < 10 ? 'eager' : 'lazy'}
+                  placeholder={photo.blurDataUrl ? 'blur' : 'empty'}
+                  blurDataURL={photo.blurDataUrl}
                 />
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />

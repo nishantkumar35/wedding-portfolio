@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: 'res.cloudinary.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.youtube.com',
+        pathname: '/**',
+      },
     ],
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [200, 400, 600],
@@ -16,3 +21,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+

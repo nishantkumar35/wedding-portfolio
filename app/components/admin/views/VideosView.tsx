@@ -28,7 +28,7 @@ interface Video {
   createdAt: string
 }
 
-export default function VideosPage() {
+export function VideosView() {
   const [videos, setVideos] = useState<Video[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')

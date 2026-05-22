@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
+import Image from 'next/image'
 import {
   Plus, Trash2, Edit2, Check, X, Image as ImageIcon, BookImage, Loader2, Search, ChevronRight, ChevronLeft, Upload, Images
 } from 'lucide-react'
@@ -32,11 +33,12 @@ interface Photo {
   albumId: string
   url: string
   thumbnailUrl: string
+  blurDataUrl?: string
   caption: string
   createdAt: string
 }
 
-export default function AlbumsPage() {
+export function AlbumsView() {
   const [albums, setAlbums] = useState<Album[]>([])
   const [photos, setPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(true)
@@ -301,10 +303,15 @@ export default function AlbumsPage() {
                   tabIndex={0}
                   className={`w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all duration-200 cursor-pointer ${selected?._id === album._id ? 'bg-primary/10 border-primary/30 shadow-sm' : 'bg-card border-border hover:border-primary/20 hover:bg-muted/30'}`}
                 >
-                  <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-muted/40 flex items-center justify-center">
+                  <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-muted/40 flex items-center justify-center">
                     {album.coverUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={album.coverUrl} alt={album.name} className="w-full h-full object-cover" />
+                      <Image
+                        src={album.coverUrl}
+                        alt={album.name}
+                        fill
+                        sizes="48px"
+                        className="object-cover"
+                      />
                     ) : (
                       <ImageIcon className="w-5 h-5 text-muted-foreground/50" />
                     )}
@@ -425,10 +432,18 @@ export default function AlbumsPage() {
                     </div>
                  ) : (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                      {selectedPhotos.map(photo => (
+                      {selectedPhotos.map((photo, index) => (
                         <div key={photo._id} className="group relative aspect-square rounded-xl overflow-hidden bg-muted/30 border border-border">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={photo.thumbnailUrl || photo.url} alt={photo.caption || ''} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                          <Image
+                            src={photo.thumbnailUrl || photo.url}
+                            alt={photo.caption || ''}
+                            fill
+                            sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading={index < 8 ? 'eager' : 'lazy'}
+                            placeholder={photo.blurDataUrl ? 'blur' : 'empty'}
+                            blurDataURL={photo.blurDataUrl}
+                          />
                           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                             <Button size="icon" variant="ghost" className="h-8 w-8 text-white hover:text-red-400 hover:bg-red-500/20 rounded-lg" onClick={() => setDeletePhotoId(photo._id)}>
                               <Trash2 className="w-4 h-4" />

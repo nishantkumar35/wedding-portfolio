@@ -29,7 +29,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row items-center justify-between pt-10 border-t border-white/10 gap-6">
+        <div className="flex flex-col md:flex-row items-center justify-between pt-5 border-t border-white/10 gap-6">
           <p className="text-xs text-white/50 order-2 md:order-1 font-light tracking-wide">
             © {new Date().getFullYear()} by Johanna Reed. Built for Timeless Stories.
           </p>

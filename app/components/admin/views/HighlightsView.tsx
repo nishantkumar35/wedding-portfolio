@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
+import Image from 'next/image'
 import {
   Plus, Trash2, Star, Upload, Video, Image as ImageIcon,
   Loader2, Search, ChevronRight, X, ExternalLink
@@ -25,6 +26,7 @@ interface HighlightItem {
   type: 'photo' | 'youtube'
   url?: string
   thumbnailUrl?: string
+  blurDataUrl?: string
   caption?: string
   youtubeId?: string
   youtubeTitle?: string
@@ -35,12 +37,12 @@ interface Highlight {
   title: string
   slug: string
   order: number
-  cover: { url: string; thumbnailUrl: string }
+  cover: { url: string; thumbnailUrl: string; blurDataUrl?: string }
   items: HighlightItem[]
   createdAt: string
 }
 
-export default function HighlightsPage() {
+export function HighlightsView() {
   const [highlights, setHighlights] = useState<Highlight[]>([])
   const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState<Highlight | null>(null)
@@ -269,9 +271,16 @@ export default function HighlightsPage() {
                   tabIndex={0}
                   className={`w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all duration-200 cursor-pointer ${selected?._id === h._id ? 'bg-primary/10 border-primary/30 shadow-sm' : 'bg-card border-border hover:border-primary/20 hover:bg-muted/30'}`}
                 >
-                  <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-muted/40">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={h.cover.thumbnailUrl} alt={h.title} className="w-full h-full object-cover" />
+                  <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-muted/40">
+                    <Image
+                      src={h.cover.thumbnailUrl}
+                      alt={h.title}
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                      placeholder={h.cover.blurDataUrl ? 'blur' : 'empty'}
+                      blurDataURL={h.cover.blurDataUrl}
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">{h.title}</p>
@@ -301,8 +310,16 @@ export default function HighlightsPage() {
             <div className="bg-card border border-border rounded-2xl overflow-hidden">
               {/* Cover banner */}
               <div className="relative h-36 overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={selected.cover.url} alt={selected.title} className="w-full h-full object-cover" />
+                <Image
+                  src={selected.cover.url}
+                  alt={selected.title}
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                  priority
+                  placeholder={selected.cover.blurDataUrl ? 'blur' : 'empty'}
+                  blurDataURL={selected.cover.blurDataUrl}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-card/90 to-transparent" />
                 <div className="absolute bottom-4 left-4">
                   <h3 className="text-lg font-bold text-white">{selected.title}</h3>
@@ -401,18 +418,28 @@ export default function HighlightsPage() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {selected.items.map(item => (
+                    {selected.items.map((item, index) => (
                       <div key={item._id} className="group relative aspect-video rounded-xl overflow-hidden bg-muted/40 border border-border hover:border-primary/30 transition-all">
                         {item.type === 'photo' ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={item.thumbnailUrl || item.url} alt={item.caption || ''} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                          <Image
+                            src={item.thumbnailUrl || item.url!}
+                            alt={item.caption || ''}
+                            fill
+                            sizes="(max-width: 640px) 50vw, 33vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading={index < 6 ? 'eager' : 'lazy'}
+                            placeholder={item.blurDataUrl ? 'blur' : 'empty'}
+                            blurDataURL={item.blurDataUrl}
+                          />
                         ) : (
                           <div className="relative w-full h-full">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
+                            <Image
                               src={`https://img.youtube.com/vi/${item.youtubeId}/mqdefault.jpg`}
                               alt={item.youtubeTitle || ''}
-                              className="w-full h-full object-cover"
+                              fill
+                              sizes="(max-width: 640px) 50vw, 33vw"
+                              className="object-cover"
+                              loading={index < 6 ? 'eager' : 'lazy'}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
                               <div className="w-8 h-8 rounded-full bg-red-600/90 flex items-center justify-center">
