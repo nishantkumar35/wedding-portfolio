@@ -24,7 +24,7 @@ export function GallerySlider({ initialPhotos }: { initialPhotos: Photo[] }) {
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data) && data.length > 0) {
-            setPhotos(data.slice(0, 10)) // Get top 10 recent photos
+            setPhotos(data.slice(0, 10)) 
           }
         })
         .catch(console.error)

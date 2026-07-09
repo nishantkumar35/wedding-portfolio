@@ -11,6 +11,7 @@ import { AlbumsView } from './views/AlbumsView'
 import { PhotosView } from './views/PhotosView'
 import { HighlightsView } from './views/HighlightsView'
 import { VideosView } from './views/VideosView'
+import { InquiriesView } from './views/InquiriesView'
 
 interface AdminAppProps {
   session: Session
@@ -27,11 +28,12 @@ export function AdminApp({ session, initialStats, initialRecentAlbums }: AdminAp
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <AdminHeader session={session} />
         <main className="flex-1 overflow-y-auto p-6 bg-background">
-          {activeTab === 'dashboard' && <DashboardView stats={initialStats} recentAlbums={initialRecentAlbums} setActiveTab={setActiveTab} />}
-          {activeTab === 'albums' && <AlbumsView />}
-          {activeTab === 'photos' && <PhotosView />}
+          {activeTab === 'dashboard'  && <DashboardView stats={initialStats} recentAlbums={initialRecentAlbums} setActiveTab={setActiveTab} />}
+          {activeTab === 'albums'     && <AlbumsView />}
+          {activeTab === 'photos'     && <PhotosView />}
           {activeTab === 'highlights' && <HighlightsView />}
-          {activeTab === 'videos' && <VideosView />}
+          {activeTab === 'videos'     && <VideosView />}
+          {activeTab === 'inquiries'  && <InquiriesView />}
         </main>
       </div>
     </>

@@ -7,6 +7,7 @@ import {
   Video as VideoIcon,
   TrendingUp,
   Activity,
+  Mail,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -18,6 +19,8 @@ interface DashboardViewProps {
     photos: number
     highlights: number
     videos: number
+    inquiries: number
+    newInquiries: number
   }
   recentAlbums: any[]
   setActiveTab: (tab: AdminTab) => void
@@ -61,13 +64,23 @@ export function DashboardView({ stats, recentAlbums, setActiveTab }: DashboardVi
       border: 'border-rose-500/20',
       desc: 'YouTube links',
     },
+    {
+      title: 'Inquiries',
+      value: stats.inquiries,
+      icon: Mail,
+      color: 'text-emerald-500',
+      bg: 'bg-emerald-500/10',
+      border: 'border-emerald-500/20',
+      desc: stats.newInquiries > 0 ? `${stats.newInquiries} new unread` : 'Contact submissions',
+    },
   ]
 
   const quickLinks: { label: string; tab: AdminTab; icon: any; color: string; bg: string }[] = [
-    { label: 'New Album', tab: 'albums', icon: BookImage, color: 'text-violet-500', bg: 'bg-violet-500/10 border-violet-500/20 hover:bg-violet-500/20' },
-    { label: 'Upload Photos', tab: 'photos', icon: Images, color: 'text-sky-500', bg: 'bg-sky-500/10 border-sky-500/20 hover:bg-sky-500/20' },
-    { label: 'New Highlight', tab: 'highlights', icon: Star, color: 'text-amber-500', bg: 'bg-amber-500/10 border-amber-500/20 hover:bg-amber-500/20' },
-    { label: 'Add Video', tab: 'videos', icon: VideoIcon, color: 'text-rose-500', bg: 'bg-rose-500/10 border-rose-500/20 hover:bg-rose-500/20' },
+    { label: 'New Album',    tab: 'albums',     icon: BookImage,  color: 'text-violet-500',  bg: 'bg-violet-500/10 border-violet-500/20 hover:bg-violet-500/20' },
+    { label: 'Upload Photos', tab: 'photos',   icon: Images,     color: 'text-sky-500',     bg: 'bg-sky-500/10 border-sky-500/20 hover:bg-sky-500/20' },
+    { label: 'New Highlight', tab: 'highlights', icon: Star,     color: 'text-amber-500',   bg: 'bg-amber-500/10 border-amber-500/20 hover:bg-amber-500/20' },
+    { label: 'Add Video',    tab: 'videos',     icon: VideoIcon,  color: 'text-rose-500',    bg: 'bg-rose-500/10 border-rose-500/20 hover:bg-rose-500/20' },
+    { label: 'Inquiries',    tab: 'inquiries',  icon: Mail,       color: 'text-emerald-500', bg: 'bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500/20' },
   ]
 
   return (
@@ -90,7 +103,7 @@ export function DashboardView({ stats, recentAlbums, setActiveTab }: DashboardVi
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
         {statCards.map(({ title, value, icon: Icon, color, bg, border, desc }, i) => (
           <Card
             key={title}

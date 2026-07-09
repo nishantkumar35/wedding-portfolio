@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CircularGallery from "@/components/CircularGallery";
 import Image from "next/image";
+import { ContactForm } from "@/components/ContactForm";
 
 export const revalidate = 3600;
 
@@ -72,8 +73,10 @@ export default async function Home() {
                   variant="outline"
                   className="rounded-none border-[#333C43] text-[#333C43] hover:bg-[#333C43] hover:text-white px-8 py-3 text-md uppercase tracking-widest transition-colors bg-transparent h-auto"
                 >
+                  <Link href={"#contact"}>
                   Get in Touch{" "}
                   <span className="ml-2 text-md tracking-normal">»</span>
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -117,10 +120,10 @@ export default async function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
                 {
-                  url: "/assets/hero1.jpg",
+                  url: "/assets/hero2.jpg",
                 },
                 {
-                  url: "/assets/hero2.jpg",
+                  url: "/assets/hero1.jpg",
                 },
                 {
                   url: "/assets/hero3.jpg",
@@ -347,136 +350,7 @@ export default async function Home() {
         </section>
 
         {/* CONTACT SECTION */}
-        <section id="contact" className="py-10 px-6 bg-[#C4D1D4]">
-          <div className="container mx-auto max-w-5xl flex flex-col md:flex-row shadow-2xl bg-white rounded-sm overflow-hidden">
-            {/* Left side Image placeholder */}
-            <div className="w-full md:w-[45%] bg-[#7B8B94] min-h-[400px] md:min-h-full relative">
-              <Image
-                src="/assets/form.jpg"
-                alt=""
-                className="w-full h-full object-cover"
-                fill
-              />
-            </div>
-
-            {/* Right side form */}
-            <div className="w-full md:w-[55%] p-12 md:p-14 lg:p-16">
-              <h2 className="font-serif text-[38px] text-[#333C43] italic mb-3">
-                Get in Touch
-              </h2>
-              <p className="text-[#333C43]/60 font-light text-[11px] leading-relaxed mb-10 max-w-sm">
-                I'd love to hear about your special day! Please fill out the
-                form below, and I'll get back to you soon.
-              </p>
-
-              <form className="space-y-7">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 gap-y-7">
-                  <div className="space-y-2">
-                    <label className="text-[9px] font-semibold text-[#333C43] uppercase tracking-widest">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full border-b border-gray-200 bg-transparent py-1.5 focus:outline-none focus:border-[#8697A0] transition-colors text-sm placeholder:text-[#333C43]/30"
-                      placeholder="First Name"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[9px] font-semibold text-[#333C43] uppercase tracking-widest opacity-0 hidden sm:block">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full border-b border-gray-200 bg-transparent py-1.5 focus:outline-none focus:border-[#8697A0] transition-colors text-sm placeholder:text-[#333C43]/30"
-                      placeholder="Last Name"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[9px] font-semibold text-[#333C43] uppercase tracking-widest">
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      className="w-full border-b border-gray-200 bg-transparent py-1.5 focus:outline-none focus:border-[#8697A0] transition-colors text-sm placeholder:text-[#333C43]/30"
-                      placeholder="Email"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[9px] font-semibold text-[#333C43] uppercase tracking-widest">
-                      Phone
-                    </label>
-                    <input
-                      type="tel"
-                      className="w-full border-b border-gray-200 bg-transparent py-1.5 focus:outline-none focus:border-[#8697A0] transition-colors text-sm placeholder:text-[#333C43]/30"
-                      placeholder="Phone"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[9px] font-semibold text-[#333C43] uppercase tracking-widest">
-                      Wedding Date
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full border-b border-gray-200 bg-transparent py-1.5 focus:outline-none focus:border-[#8697A0] transition-colors text-sm placeholder:text-[#333C43]/30"
-                      placeholder="mm/dd/yyyy"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[9px] font-semibold text-[#333C43] uppercase tracking-widest">
-                      Location / Venue
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full border-b border-gray-200 bg-transparent py-1.5 focus:outline-none focus:border-[#8697A0] transition-colors text-sm placeholder:text-[#333C43]/30"
-                      placeholder="Location"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[9px] font-semibold text-[#333C43] uppercase tracking-widest">
-                    Which Package Are You Interested In?
-                  </label>
-                  <select
-                    defaultValue=""
-                    className="w-full border-b border-gray-200 bg-transparent py-1.5 focus:outline-none focus:border-[#8697A0] transition-colors text-sm text-[#333C43]/80"
-                  >
-                    <option value="" disabled hidden>
-                      Select a package
-                    </option>
-                    <option value="The Essentials">The Essentials</option>
-                    <option value="The Classic">The Classic</option>
-                    <option value="The Luxe">The Luxe</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[9px] font-semibold text-[#333C43] uppercase tracking-widest">
-                    Message
-                  </label>
-                  <textarea
-                    rows={2}
-                    className="w-full border-b border-gray-200 bg-transparent py-1.5 focus:outline-none focus:border-[#8697A0] transition-colors resize-none text-sm placeholder:text-[#333C43]/30"
-                    placeholder="Write a message..."
-                  />
-                </div>
-
-                <p className="text-[10px] text-[#333C43]/50 italic font-light pt-2 pb-2">
-                  Tell me a little about your vision, how you met, or any
-                  details you'd like to share!
-                </p>
-
-                <Button className="w-full bg-[#F4F3ED] border-2 border-[#333C43] text-[#333C43] hover:bg-[#333C43] hover:text-[#F4F3ED] rounded-none py-6 uppercase tracking-widest text-[10px] font-semibold transition-colors shadow-none h-auto">
-                  Send Inquiry
-                </Button>
-              </form>
-            </div>
-          </div>
-        </section>
+        <ContactForm />
       </main>
 
       <Footer />

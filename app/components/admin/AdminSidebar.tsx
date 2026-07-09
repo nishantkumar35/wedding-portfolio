@@ -8,17 +8,19 @@ import {
   Star,
   Camera,
   ChevronRight,
+  Mail,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-export type AdminTab = 'dashboard' | 'albums' | 'photos' | 'highlights' | 'videos'
+export type AdminTab = 'dashboard' | 'albums' | 'photos' | 'highlights' | 'videos' | 'inquiries'
 
 const navItems: { label: string; tab: AdminTab; icon: any }[] = [
-  { label: 'Dashboard', tab: 'dashboard', icon: LayoutDashboard },
-  { label: 'Albums', tab: 'albums', icon: BookImage },
-  { label: 'Photos', tab: 'photos', icon: Images },
+  { label: 'Dashboard',  tab: 'dashboard',  icon: LayoutDashboard },
+  { label: 'Albums',     tab: 'albums',     icon: BookImage },
+  { label: 'Photos',     tab: 'photos',     icon: Images },
   { label: 'Highlights', tab: 'highlights', icon: Star },
-  { label: 'Videos', tab: 'videos', icon: Video },
+  { label: 'Videos',     tab: 'videos',     icon: Video },
+  { label: 'Inquiries',  tab: 'inquiries',  icon: Mail },
 ]
 
 interface AdminSidebarProps {
