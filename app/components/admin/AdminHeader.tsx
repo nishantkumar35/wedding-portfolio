@@ -1,7 +1,7 @@
 'use client'
 
 import { signOut } from 'next-auth/react'
-import { Bell, LogOut, User } from 'lucide-react'
+import { Bell, LogOut, User, Menu } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,21 +15,27 @@ import type { Session } from 'next-auth'
 
 interface AdminHeaderProps {
   session: Session
+  onMenuClick: () => void
 }
 
-export function AdminHeader({ session }: AdminHeaderProps) {
+export function AdminHeader({ session, onMenuClick }: AdminHeaderProps) {
   const initials = (session.user?.name ?? session.user?.email ?? 'A')
     .charAt(0)
     .toUpperCase()
 
   return (
-    <header className="flex items-center justify-between px-6 py-4 border-b border-[var(--admin-sidebar-border)] bg-[var(--admin-header-bg)] backdrop-blur-sm sticky top-0 z-10">
-      <div>
-        <h2 className="text-sm font-medium text-foreground">Welcome back 👋</h2>
-        <p className="text-xs text-muted-foreground">{session.user?.email}</p>
+    <header className="flex items-center justify-between px-4 md:px-6 py-4 border-b border-[var(--admin-sidebar-border)] bg-[var(--admin-header-bg)] backdrop-blur-sm sticky top-0 z-10">
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" onClick={onMenuClick} className="md:hidden">
+          <Menu className="w-5 h-5 text-foreground" />
+        </Button>
+        <div className="hidden sm:block">
+          <h2 className="text-sm font-medium text-foreground">Welcome back 👋</h2>
+          <p className="text-xs text-muted-foreground">{session.user?.email}</p>
+        </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 md:gap-3">
         <Button
           variant="ghost"
           size="icon"

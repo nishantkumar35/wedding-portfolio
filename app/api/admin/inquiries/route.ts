@@ -3,6 +3,9 @@ import { connectDB } from '@/lib/db'
 import { ContactInquiry } from '@/models/ContactInquiry'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { InquiryStatusSchema } from '@/lib/validators'
+
+const MAX_LIMIT = 100
 
 export async function GET(req: Request) {
   try {
@@ -11,8 +14,8 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url)
     const status = searchParams.get('status') // 'new' | 'read' | 'replied' | null (all)
-    const page   = parseInt(searchParams.get('page')  || '1')
-    const limit  = parseInt(searchParams.get('limit') || '20')
+    const page   = Math.max(1, parseInt(searchParams.get('page')  || '1'))
+    const limit  = Math.min(MAX_LIMIT, Math.max(1, parseInt(searchParams.get('limit') || '20')))
     const skip   = (page - 1) * limit
 
     await connectDB()
@@ -43,8 +46,16 @@ export async function PATCH(req: Request) {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const { id, status } = await req.json()
-    if (!id || !status) return NextResponse.json({ error: 'id and status are required' }, { status: 400 })
+    const body = await req.json()
+    const parsed = InquiryStatusSchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message ?? 'Invalid input' },
+        { status: 400 }
+      )
+    }
+
+    const { id, status } = parsed.data
 
     await connectDB()
     const inquiry = await ContactInquiry.findByIdAndUpdate(id, { status }, { new: true })
@@ -73,3 +84,4 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+

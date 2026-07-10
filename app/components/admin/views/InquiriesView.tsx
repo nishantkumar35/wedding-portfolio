@@ -197,7 +197,7 @@ export function InquiriesView() {
 
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
         {/* Left: List */}
-        <div className="xl:col-span-2 space-y-4">
+        <div className={`xl:col-span-2 space-y-4 ${selected ? 'hidden xl:block' : 'block'}`}>
           {/* Filter tabs */}
           <div className="flex gap-1.5 flex-wrap">
             {FILTERS.map(f => (
@@ -301,11 +301,14 @@ export function InquiriesView() {
         </div>
 
         {/* Right: Detail panel */}
-        <div className="xl:col-span-3">
+        <div className={`xl:col-span-3 ${selected ? 'block' : 'hidden xl:block'}`}>
           {selected ? (
             <Card className="bg-card border-border sticky top-6">
               <CardHeader className="flex flex-row items-start justify-between pb-4">
                 <div className="flex items-center gap-3">
+                  <Button variant="ghost" size="icon" className="xl:hidden -ml-2" onClick={() => setSelected(null)}>
+                    <ChevronLeft className="w-5 h-5 text-muted-foreground" />
+                  </Button>
                   <div className={`w-11 h-11 rounded-full ${STATUS_CONFIG[selected.status].bg} border ${STATUS_CONFIG[selected.status].border} flex items-center justify-center`}>
                     <User className={`w-5 h-5 ${STATUS_CONFIG[selected.status].color}`} />
                   </div>

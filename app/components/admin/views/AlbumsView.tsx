@@ -278,7 +278,7 @@ export function AlbumsView() {
 
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
         {/* Left: list */}
-        <div className="xl:col-span-2 space-y-4">
+        <div className={`xl:col-span-2 space-y-4 ${selected ? 'hidden xl:block' : 'block'}`}>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search folders…" className="pl-9 bg-card border-border" />
@@ -334,7 +334,7 @@ export function AlbumsView() {
         </div>
 
         {/* Right: detail */}
-        <div className="xl:col-span-3">
+        <div className={`xl:col-span-3 ${selected ? 'block' : 'hidden xl:block'}`}>
           {!selected ? (
             <div className="flex flex-col items-center justify-center h-64 rounded-2xl border border-border bg-card text-center">
               <Images className="w-10 h-10 text-muted-foreground/20 mb-3" />
@@ -343,10 +343,15 @@ export function AlbumsView() {
           ) : (
             <div className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col min-h-[500px]">
               {/* Header */}
-              <div className="p-5 border-b border-border flex items-center justify-between">
-                 <div>
-                   <h2 className="text-xl font-bold text-foreground">{selected.name}</h2>
-                   <p className="text-sm text-muted-foreground">/{selected.slug}</p>
+              <div className="p-5 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                 <div className="flex items-center gap-3">
+                   <Button variant="ghost" size="icon" className="xl:hidden" onClick={() => setSelected(null)}>
+                     <ChevronLeft className="w-5 h-5 text-muted-foreground" />
+                   </Button>
+                   <div>
+                     <h2 className="text-xl font-bold text-foreground">{selected.name}</h2>
+                     <p className="text-sm text-muted-foreground">/{selected.slug}</p>
+                   </div>
                  </div>
                  
                  <Dialog open={openUpload} onOpenChange={setOpenUpload}>
