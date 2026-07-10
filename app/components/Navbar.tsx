@@ -74,7 +74,7 @@ export function Navbar() {
         <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex flex-col">
+            <Link href="/" className="flex flex-col" aria-label="Aarsh Wedding Videography - Home">
               <span className="font-serif text-2xl md:text-[28px] font-bold tracking-wide text-[#333C43] uppercase leading-none">
                 AARSH
               </span>

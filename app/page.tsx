@@ -7,6 +7,7 @@ import Link from "next/link";
 import CircularGallery from "@/components/CircularGallery";
 import Image from "next/image";
 import { ContactForm } from "@/components/ContactForm";
+import { StructuredData, localBusinessSchema, faqSchema } from "@/components/StructuredData";
 
 export const revalidate = 3600;
 
@@ -33,6 +34,8 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">
+      <StructuredData data={localBusinessSchema} />
+      <StructuredData data={faqSchema} />
       <Navbar />
 
       <main>
@@ -46,14 +49,17 @@ export default async function Home() {
             <div className="w-full md:w-1/2 aspect-[4/5] bg-[#C4D1D4] rounded-tl-[60px] rounded-br-[60px] rounded-tr-xl rounded-bl-xl overflow-hidden relative shadow-md">
               <Image
                 src="/assets/hero.jpeg"
-                alt="Whats App Image 2026 04 20 at 7 51 44 PM"
+                alt="Aarsh Wedding Videography - Best Wedding Videographer in Begusarai"
                 className="w-full h-full object-cover rounded-[inherit]"
                 fill
+                priority
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
 
             <div className="w-full md:w-1/2 space-y-6 md:pl-8">
-              <h1 className="font-serif  font-bold leading-[1.1] text-[#333C43]">
+              <h1 className="sr-only">Aarsh Wedding Videography | Best Wedding Videographer in Begusarai</h1>
+              <div className="font-serif  font-bold leading-[1.1] text-[#333C43]" role="heading" aria-level={2}>
                 <span className="text-5xl md:text-[60px]">
                   <span className="italic font-light">Capturing </span>
                   Timeless
@@ -62,7 +68,7 @@ export default async function Home() {
                 <span className="text-4xl text-[40px] font-light">
                   Love <span className="italic font-light">Stories</span>
                 </span>
-              </h1>
+              </div>
               <p className="text-[#8697A0] text-lg max-w-md font-light tracking-wide pt-2">
                 Elegant Wedding Photography
                 <br />
@@ -103,14 +109,15 @@ export default async function Home() {
               </div>
               <div className="w-full md:w-8/12">
                 <p className="text-white/70 text-sm md:text-sm leading-loose font-light tracking-wide">
-                  Hi, I'm Aashis — a passionate wedding videographer dedicated
+                  Hi, I'm Aashis — a passionate wedding videographer based in Begusarai, Bihar, dedicated
                   to capturing authentic, heartfelt moments. With a love for
                   natural light, elegant details, and genuine emotions, I strive
-                  to create timeless photographs that tell your unique love
+                  to create timeless cinematic films and photographs that tell your unique love
                   story.
                   <br />
                   <br />
-                  Every couple's journey is special, and my mission is to
+                  Whether it's a pre-wedding shoot in Begusarai or a destination wedding, 
+                  every couple's journey is special, and my mission is to
                   document your day in a way that feels effortless, beautiful,
                   and true to you.
                 </p>
@@ -135,9 +142,10 @@ export default async function Home() {
                 >
                   <Image
                     src={item.url}
-                    alt={`gallery-${i}`}
+                    alt={`Aarsh Wedding Videography - Cinematic Wedding Films in Bihar ${i+1}`}
                     className="w-full h-full object-cover"
                     fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </div>
               ))}
@@ -196,9 +204,10 @@ export default async function Home() {
                   <div className="w-full h-50  md:h-70 aspect-[4/5] bg-[#E3E8EA] relative" >
                     <Image
                       src={service.url}
-                      alt={`service-${i}`}
+                      alt={`Aarsh Wedding Videography - ${service.title.replace('\n', ' ')}`}
                       className="w-full h-full object-cover"
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
                     />
                   </div>
                   <div className="p-6 flex flex-col flex-grow items-center text-center">
