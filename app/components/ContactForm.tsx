@@ -214,9 +214,11 @@ export function ContactForm() {
                 className="w-full border-b border-gray-200 bg-transparent py-1.5 focus:outline-none focus:border-[#8697A0] transition-colors text-sm text-[#333C43]/80"
               >
                 <option value="" disabled hidden>Select a package</option>
-                <option value="The Essentials">The Essentials</option>
-                <option value="The Classic">The Classic</option>
-                <option value="The Luxe">The Luxe</option>
+                <option value="Traditional Package (Without Drone) — ₹30,000">Traditional Package — Without Drone (₹30,000)</option>
+                <option value="Traditional Package (With Drone) — ₹35,000">Traditional Package — With Drone (₹35,000)</option>
+                <option value="Premium Cinematic Package — ₹50,000">Premium Cinematic Package (₹50,000)</option>
+                <option value="Full Event-wise Quotation — ₹86,000">Full Event-wise Quotation (₹86,000)</option>
+                <option value="Custom / Not Sure Yet">Custom / Not Sure Yet</option>
               </select>
             </div>
 

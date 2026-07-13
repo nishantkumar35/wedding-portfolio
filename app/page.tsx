@@ -268,7 +268,7 @@ export default async function Home() {
 
         {/* PRICING PACKAGES SECTION */}
         <section id="pricing" className="py-10 px-6 bg-[#FAF9F6]">
-          <div className="container mx-auto max-w-5xl">
+          <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16 space-y-4">
               <h2 className="font-serif text-4xl md:text-[44px] text-[#333C43] tracking-wide">
                 Photography{" "}
@@ -281,79 +281,196 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  name: "The Essentials",
-                  price: "$1,200",
-                  desc: "Perfect for intimate weddings and elopements.",
-                  features: [
-                    "Up to 4 hours of coverage",
-                    "200+ edited high-resolution photos",
-                    "Online gallery for viewing and sharing",
-                    "Print release rights",
-                  ],
-                },
-                {
-                  name: "The Classic",
-                  price: "$2,400",
-                  desc: "Comprehensive coverage for your big day.",
-                  features: [
-                    "Up to 8 hours of coverage",
-                    "400+ edited high-resolution photos",
-                    "Online gallery + USB drive",
-                    "Complimentary engagement session",
-                    "Print release rights",
-                  ],
-                },
-                {
-                  name: "The Luxe",
-                  price: "$3,800",
-                  desc: "For couples who want it all.",
-                  features: [
-                    "Full-day coverage (up to 12 hours)",
-                    "600+ edited high-resolution photos",
-                    "Online gallery + custom USB box",
-                    "Engagement session + Bridal portrait session",
-                    "10x10 handcrafted wedding album",
-                    "Print release rights",
-                  ],
-                },
-              ].map((pkg, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-tl-[40px] rounded-br-[40px] rounded-tr-xl rounded-bl-xl overflow-hidden flex flex-col shadow-[0_8px_30px_-15px_rgba(0,0,0,0.1)]"
-                >
-                  <div className="w-full bg-[#8697A0] py-5 text-center">
-                    <h3 className="font-serif text-white italic tracking-widest text-[17px]">
-                      {pkg.name}
-                    </h3>
-                  </div>
-                  <div className="p-8 flex flex-col flex-grow text-center items-center">
-                    <div className="mb-3">
-                      <span className="text-3xl font-bold text-[#333C43]">
-                        {pkg.price}
-                      </span>
+            {/* Top 2 packages */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+              {/* Traditional Package */}
+              <div className="bg-white rounded-tl-[40px] rounded-br-[40px] rounded-tr-xl rounded-bl-xl overflow-hidden flex flex-col shadow-[0_8px_30px_-15px_rgba(0,0,0,0.1)]">
+                <div className="w-full bg-[#8697A0] py-5 text-center">
+                  <h3 className="font-serif text-white italic tracking-widest text-[17px]">Traditional Package</h3>
+                  <p className="text-white/70 text-[10px] tracking-widest mt-1 uppercase">Capturing Moments, Creating Memories</p>
+                </div>
+                <div className="p-8 flex flex-col flex-grow">
+                  <ul className="space-y-3 mb-8">
+                    {[
+                      "Traditional Videography",
+                      "Traditional Photography",
+                      "Album 30 Sheets (200 Photos)",
+                      "Long Length Edited Video",
+                      "Pendrive",
+                    ].map((s, i) => (
+                      <li key={i} className="text-[#333C43]/70 text-[11px] font-light flex items-start gap-2 leading-relaxed">
+                        <span className="text-[#8697A0] text-[9px] mt-1">✓</span> {s}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="space-y-3 mt-auto">
+                    <div className="flex items-center justify-between border border-[#8697A0]/30 rounded-lg px-4 py-3">
+                      <span className="text-[11px] text-[#333C43]/60 font-light tracking-wide">Without Drone</span>
+                      <span className="text-xl font-bold text-[#333C43]">₹30,000/-</span>
                     </div>
-                    <p className="text-[#333C43]/60 text-[11px] font-light mb-8 h-8 max-w-[200px] leading-relaxed">
-                      {pkg.desc}
-                    </p>
-                    <ul className="space-y-4 text-left flex-grow w-full px-2">
-                      {pkg.features.map((f, j) => (
-                        <li
-                          key={j}
-                          className="text-[#333C43]/70 text-[11px] font-light flex items-start gap-2 leading-relaxed"
-                        >
-                          <span className="text-[#8697A0] text-[9px] mt-1">
-                            ✓
-                          </span>{" "}
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="flex items-center justify-between border border-[#8697A0]/30 rounded-lg px-4 py-3 bg-[#8697A0]/5">
+                      <span className="text-[11px] text-[#333C43]/60 font-light tracking-wide">With Drone</span>
+                      <span className="text-xl font-bold text-[#333C43]">₹35,000/-</span>
+                    </div>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Premium Cinematic Package */}
+              <div className="bg-[#2D3539] rounded-tl-[40px] rounded-br-[40px] rounded-tr-xl rounded-bl-xl overflow-hidden flex flex-col shadow-[0_8px_30px_-15px_rgba(0,0,0,0.2)]">
+                <div className="w-full bg-[#333C43] py-5 text-center relative">
+                  <span className="absolute top-3 right-4 text-[9px] uppercase tracking-widest text-[#C4D1D4]/80 border border-[#C4D1D4]/30 px-2 py-0.5 rounded-full">Popular</span>
+                  <h3 className="font-serif text-white italic tracking-widest text-[17px]">Premium Cinematic Package</h3>
+                  <p className="text-white/50 text-[10px] tracking-widest mt-1 uppercase">Capturing Moments, Creating Memories</p>
+                </div>
+                <div className="p-8 flex flex-col flex-grow">
+                  <ul className="space-y-3 mb-8">
+                    {[
+                      "Traditional Videography",
+                      "Traditional Photography",
+                      "Cinematic Videography (Wedding Day)",
+                      "Album 50 Sheets (300 Photos)",
+                      "Long Length Edited Video",
+                      "Cinematic Highlight (5–7 Mins)",
+                      "2–3 Reels",
+                      "Pendrive",
+                      "Drone Coverage",
+                    ].map((s, i) => (
+                      <li key={i} className="text-white/70 text-[11px] font-light flex items-start gap-2 leading-relaxed">
+                        <span className="text-[#C4D1D4] text-[9px] mt-1">✓</span> {s}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-auto text-center border border-white/20 rounded-lg px-4 py-4">
+                    <p className="text-white/50 text-[10px] tracking-widest uppercase mb-1">Package Price</p>
+                    <span className="text-3xl font-bold text-white">₹50,000/-</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Full Event-wise Quotation */}
+            <div className="bg-white rounded-tl-[40px] rounded-br-[40px] rounded-tr-xl rounded-bl-xl overflow-hidden shadow-[0_8px_30px_-15px_rgba(0,0,0,0.1)]">
+              <div className="w-full bg-[#8697A0] py-5 text-center">
+                <h3 className="font-serif text-white italic tracking-widest text-[17px]">Full Event-wise Quotation</h3>
+                <p className="text-white/70 text-[10px] tracking-widest mt-1 uppercase">Capturing Moments, Creating Memories</p>
+              </div>
+              <div className="p-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  {/* Events with pricing */}
+                  <div className="space-y-6">
+                    {[
+                      {
+                        name: "Tilak Shagun",
+                        items: [
+                          { label: "Traditional Videography", price: "₹3,500/-" },
+                          { label: "Traditional Photography", price: "₹3,500/-" },
+                        ],
+                      },
+                      {
+                        name: "Haldi & Mehendi",
+                        items: [
+                          { label: "Traditional Photography", price: "₹3,500/-" },
+                          { label: "Traditional Videography", price: "₹3,500/-" },
+                          { label: "Candid Photography", price: "₹5,000/-" },
+                          { label: "Cinematic Videography", price: "₹7,000/-" },
+                        ],
+                      },
+                      {
+                        name: "Girdhari Matkor",
+                        items: [
+                          { label: "Traditional Videography", price: "₹3,500/-" },
+                          { label: "Traditional Photography", price: "₹3,500/-" },
+                        ],
+                      },
+                      {
+                        name: "Wedding Day",
+                        items: [
+                          { label: "Traditional Videography", price: "₹3,500/-" },
+                          { label: "Traditional Photography", price: "₹3,500/-" },
+                          { label: "Candid Photography", price: "₹6,000/-" },
+                          { label: "Cinematic Videography", price: "₹10,000/-" },
+                          { label: "Drone", price: "₹5,000/-" },
+                        ],
+                      },
+                    ].map((event, ei) => (
+                      <div key={ei}>
+                        <h4 className="font-serif text-[#333C43] text-[13px] italic font-medium mb-2 pb-1 border-b border-[#8697A0]/20">{event.name}</h4>
+                        <ul className="space-y-1.5">
+                          {event.items.map((item, ii) => (
+                            <li key={ii} className="flex items-center justify-between text-[11px]">
+                              <span className="text-[#333C43]/60 font-light">{item.label}</span>
+                              <span className="text-[#333C43] font-medium">{item.price}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Post Production + What's Included + Total */}
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="font-serif text-[#333C43] text-[13px] italic font-medium mb-2 pb-1 border-b border-[#8697A0]/20">Post Production <span className="text-[10px] font-sans font-light text-[#8697A0] not-italic">(Included)</span></h4>
+                      <ul className="space-y-1.5">
+                        {[
+                          "Premium Combo Album 50 Sheets (300 Photos)",
+                          "Cinematic Edited Highlight (7–9 Mins)",
+                          "Traditional Edited Video (2–3 Hrs)",
+                          "Reels (3)",
+                          'LED Photo Frame (12"×36")',
+                          "Pendrive",
+                        ].map((item, ii) => (
+                          <li key={ii} className="text-[#333C43]/60 text-[11px] font-light flex items-start gap-2">
+                            <span className="text-[#8697A0] text-[9px] mt-1">✓</span> {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-serif text-[#333C43] text-[13px] italic font-medium mb-3 pb-1 border-b border-[#8697A0]/20">What&apos;s Included</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          "Photo Coverage",
+                          "Video Coverage",
+                          "Cinematic & Traditional Edits",
+                          "Drone Coverage",
+                          "Premium Album",
+                          "Pendrive & LED Frame",
+                        ].map((item, ii) => (
+                          <div key={ii} className="flex items-center gap-1.5 text-[10px] text-[#333C43]/60 font-light">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#8697A0] flex-shrink-0" />
+                            {item}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-[#2D3539] rounded-xl px-6 py-5 text-center">
+                      <p className="text-white/50 text-[10px] tracking-widest uppercase mb-1">Package Total</p>
+                      <span className="text-3xl font-bold text-white">₹86,000/-</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Shared Notes */}
+                <div className="border-t border-[#8697A0]/20 pt-6">
+                  <ul className="flex flex-wrap gap-x-8 gap-y-2 justify-center">
+                    {[
+                      "All raw files will be provided.",
+                      "Extra charges applicable for additional requirements.",
+                      "Booking will be confirmed after advance payment.",
+                      "Prices are inclusive of all applicable taxes.",
+                    ].map((note, ni) => (
+                      <li key={ni} className="text-[#333C43]/50 text-[10px] font-light flex items-center gap-1.5">
+                        <span className="text-[#8697A0]">*</span> {note}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </section>

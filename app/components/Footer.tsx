@@ -13,7 +13,7 @@ export function Footer() {
       <div className="container mx-auto px-6 max-w-7xl">
         
         {/* Newsletter Section */}
-        <div className="max-w-xl mx-auto text-center mb-5">
+        {/* <div className="max-w-xl mx-auto text-center mb-5">
           <h3 className="font-serif text-4xl mb-4 italic tracking-wide">Subscribe to my Newsletter</h3>
           <form className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-12" onSubmit={(e) => e.preventDefault()}>
             <input 
@@ -26,7 +26,7 @@ export function Footer() {
               Subscribe
             </button>
           </form>
-        </div>
+        </div> */}
 
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-5 border-t border-white/10 gap-6">

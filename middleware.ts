@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { generalLimiter, getClientIP } from '@/lib/ratelimit'
 
-export async function proxy(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   // ── 1. Rate limit all /api/* routes ───────────────────────────────────────
@@ -48,4 +48,3 @@ export async function proxy(req: NextRequest) {
 export const config = {
   matcher: ['/api/:path*', '/admin/:path*'],
 }
-
