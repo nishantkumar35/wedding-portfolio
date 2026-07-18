@@ -4,6 +4,13 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   // -------------------------------------------------------------------------
+  // Mark Node.js-only packages as external so they are never bundled into the
+  // Edge runtime.  This is the safety net that prevents accidental imports of
+  // packages like ioredis, mongoose, or sharp into middleware / Edge routes.
+  // -------------------------------------------------------------------------
+  serverExternalPackages: ['ioredis', 'mongoose', 'sharp', 'multer'],
+
+  // -------------------------------------------------------------------------
   // Security headers — applied to every route
   // -------------------------------------------------------------------------
   async headers() {
