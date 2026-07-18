@@ -31,13 +31,20 @@ export async function middleware(req: NextRequest) {
     res.headers.set('X-RateLimit-Reset',     String(reset))
     return res
   }
-  if (!process.env.NEXTAUTH_SECRET) {
-  console.error("NEXTAUTH_SECRET missing in this environment!");
-}
 
   // ── 2. Auth guard for /admin/* (except login page) ────────────────────────
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+    const secret = process.env.NEXTAUTH_SECRET
+
+    if (!secret) {
+      console.error('NEXTAUTH_SECRET missing at runtime — redirecting to login')
+      const loginUrl = new URL('/admin/login', req.url)
+      loginUrl.searchParams.set('callbackUrl', req.url)
+      return NextResponse.redirect(loginUrl)
+    }
+
+    const token = await getToken({ req, secret })
+
     if (!token) {
       const loginUrl = new URL('/admin/login', req.url)
       loginUrl.searchParams.set('callbackUrl', req.url)
