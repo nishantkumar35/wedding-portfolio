@@ -31,6 +31,9 @@ export async function middleware(req: NextRequest) {
     res.headers.set('X-RateLimit-Reset',     String(reset))
     return res
   }
+  if (!process.env.NEXTAUTH_SECRET) {
+  console.error("NEXTAUTH_SECRET missing in this environment!");
+}
 
   // ── 2. Auth guard for /admin/* (except login page) ────────────────────────
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
