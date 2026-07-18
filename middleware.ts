@@ -1,14 +1,75 @@
+/**
+ * middleware.ts — runs on the Edge runtime (always, no exceptions).
+ *
+ * ioredis / any Node.js-only package must NEVER be imported here because the
+ * Edge runtime has no `net` module and cannot open raw TCP sockets.
+ *
+ * Rate limiting here uses a lightweight in-memory sliding-window counter that
+ * is intentionally simple: it resets per Edge instance, which is fine as a
+ * first line of defence.  Precise, persistent rate limiting for sensitive
+ * endpoints (contact form, auth) is enforced inside the Node.js API route
+ * handlers using ioredis (see app/lib/ratelimit.ts).
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
-import { generalLimiter, getClientIP } from '@/lib/ratelimit'
 
+// ---------------------------------------------------------------------------
+// Edge-safe in-memory rate limiter
+// ---------------------------------------------------------------------------
+interface WindowEntry {
+  count: number
+  resetAt: number
+}
+
+const store = new Map<string, WindowEntry>()
+
+const RATE_LIMIT = 60          // requests
+const WINDOW_MS  = 60 * 1000   // 60 seconds
+
+function edgeRateLimit(ip: string): {
+  success: boolean
+  limit: number
+  remaining: number
+  reset: number
+} {
+  const now    = Date.now()
+  const entry  = store.get(ip)
+
+  if (!entry || now >= entry.resetAt) {
+    // New window
+    store.set(ip, { count: 1, resetAt: now + WINDOW_MS })
+    return { success: true, limit: RATE_LIMIT, remaining: RATE_LIMIT - 1, reset: now + WINDOW_MS }
+  }
+
+  entry.count += 1
+  const remaining = Math.max(0, RATE_LIMIT - entry.count)
+  const success   = entry.count <= RATE_LIMIT
+
+  return { success, limit: RATE_LIMIT, remaining, reset: entry.resetAt }
+}
+
+function getClientIP(req: NextRequest): string {
+  const forwarded =
+    req.headers.get('x-forwarded-for') ??
+    req.headers.get('x-real-ip')
+
+  if (forwarded) {
+    return forwarded.split(',')[0].trim()
+  }
+  return '127.0.0.1'
+}
+
+// ---------------------------------------------------------------------------
+// Middleware
+// ---------------------------------------------------------------------------
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   // ── 1. Rate limit all /api/* routes ───────────────────────────────────────
   if (pathname.startsWith('/api/')) {
     const ip = getClientIP(req)
-    const { success, limit, remaining, reset } = await generalLimiter.limit(ip)
+    const { success, limit, remaining, reset } = edgeRateLimit(ip)
 
     if (!success) {
       return NextResponse.json(
