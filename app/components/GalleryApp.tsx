@@ -38,13 +38,18 @@ const ALBUM_BATCH_SIZE = 16   // album detail batch size
 
 /* ─────────────────────────────────────────
    Masonry size pattern — repeating 8-cycle
+   Mobile (2-col): all uniform col-span-1 to avoid gaps
+   md+ (3-4 col):  rich masonry with col/row spans
 ───────────────────────────────────────── */
 function getMasonryClass(index: number): string {
   const p = index % 8
-  if (p === 0) return 'col-span-1 row-span-2'
-  if (p === 2) return 'col-span-2 row-span-1'
-  if (p === 5) return 'col-span-1 row-span-2'
-  if (p === 7) return 'col-span-2 row-span-2'
+  // On mobile (2-col grid) we keep every card uniform (col-span-1 row-span-1)
+  // so the auto-placement algorithm never leaves empty cells.
+  // On md+ we apply the decorative masonry pattern.
+  if (p === 0) return 'col-span-1 md:col-span-1 row-span-1 md:row-span-2'
+  if (p === 2) return 'col-span-1 md:col-span-2 row-span-1'
+  if (p === 5) return 'col-span-1 md:col-span-1 row-span-1 md:row-span-2'
+  if (p === 7) return 'col-span-1 md:col-span-2 row-span-1 md:row-span-2'
   return 'col-span-1 row-span-1'
 }
 
@@ -350,7 +355,7 @@ export function GalleryApp({ photos, videos, highlights, albums }: GalleryAppPro
           ) : (
             <>
               {/* Masonry grid — thumbnailUrl in grid, blurDataUrl as placeholder */}
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[180px] md:auto-rows-[220px] gap-2 md:gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[180px] md:auto-rows-[220px] gap-2 md:gap-3 [grid-auto-flow:dense]">
                 {pagedPhotos.map((p, i) => (
                   <PhotoCard
                     key={p._id || i}
@@ -470,7 +475,7 @@ export function GalleryApp({ photos, videos, highlights, albums }: GalleryAppPro
           {openAlbum.photos?.length > 0 ? (
             <>
               {/* First batch renders immediately, more loads on scroll */}
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[180px] md:auto-rows-[220px] gap-2 md:gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[180px] md:auto-rows-[220px] gap-2 md:gap-3 [grid-auto-flow:dense]">
                 {visibleAlbumPhotos.map((photo: Photo, i: number) => (
                   <PhotoCard
                     key={photo._id || i}
