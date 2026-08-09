@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, Inter } from 'next/font/google'
 import './globals.css'
+import Script from "next/script";
 
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
@@ -69,6 +70,20 @@ export default function RootLayout({
     <html lang="en" className={`scroll-smooth ${playfair.variable} ${inter.variable}`} suppressHydrationWarning>
       <body className="font-sans bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
         {children}
+        <Script
+  src="https://www.googletagmanager.com/gtag/js?id=G-C2R05ENLJJ"
+  strategy="afterInteractive"
+/>
+
+<Script id="google-analytics" strategy="afterInteractive">
+  {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-C2R05ENLJJ');
+  `}
+</Script>
       </body>
     </html>
   )
