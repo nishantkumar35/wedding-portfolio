@@ -45,8 +45,13 @@ async function getGalleryData() {
   }
 }
 
-export default async function GalleryPage() {
+export default async function GalleryPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ album?: string }>
+}) {
   const data = await getGalleryData()
+  const { album: initialAlbumId } = await searchParams
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">
@@ -64,6 +69,7 @@ export default async function GalleryPage() {
               videos={data.videos}
               highlights={data.highlights}
               albums={data.albums}
+              initialAlbumId={initialAlbumId}
             />
           </Suspense>
         </div>

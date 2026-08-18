@@ -3,6 +3,7 @@ import { Playfair_Display, Inter } from 'next/font/google'
 import './globals.css'
 import Script from "next/script";
 
+
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
   variable: '--font-serif',
@@ -69,9 +70,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`scroll-smooth ${playfair.variable} ${inter.variable}`} suppressHydrationWarning>
       <body className="font-sans bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
+
         {children}
         <Script
-  src="https://www.googletagmanager.com/gtag/js?id=G-C2R05ENLJJ"
+  src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
   strategy="afterInteractive"
 />
 
@@ -81,7 +83,7 @@ export default function RootLayout({
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-C2R05ENLJJ');
+    gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
   `}
 </Script>
       </body>

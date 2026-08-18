@@ -166,3 +166,115 @@
 .animate-fade-in-up {
   animation: fade-in-up 0.4s ease-out forwards;
 }
+
+/* ══════════════════════════════════════
+   SPLASH SCREEN  — site-matched palette
+   #2D3539 · #C4D1D4 · #8697A0 · white
+══════════════════════════════════════ */
+#aarsh-sp {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #2D3539;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+/* ── Split exit panels ── */
+.sp-pt, .sp-pb {
+  position: absolute; left: 0; right: 0; height: 50%;
+  background: #2D3539; z-index: 5;
+  transition: transform 0.75s cubic-bezier(0.76, 0, 0.24, 1);
+  will-change: transform;
+}
+.sp-pt { top: 0; }
+.sp-pb { bottom: 0; }
+#aarsh-sp.sp-out .sp-pt { transform: translate3d(0,-100%,0); }
+#aarsh-sp.sp-out .sp-pb { transform: translate3d(0,100%,0); }
+
+/* ── Thin top accent bar (mirrors site's #C4D1D4 accent) ── */
+.sp-bar {
+  position: absolute; left: 0; right: 0; top: 0;
+  height: 3px; z-index: 6;
+  background: #C4D1D4;
+  transform: scaleX(0); transform-origin: left;
+  will-change: transform;
+  animation: sp-bar-in 0.6s 0.1s ease forwards;
+}
+@keyframes sp-bar-in { to { transform: scaleX(1); } }
+
+/* ── Center content ── */
+.sp-center {
+  position: relative; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.6rem;
+  text-align: center;
+  transition: opacity 0.15s ease;
+  will-change: opacity;
+}
+#aarsh-sp.sp-out .sp-center { opacity: 0; }
+
+/* ── Brand name  (matches navbar: AARSH bold uppercase serif) ── */
+.sp-name {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3rem, 12vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffffff;
+  line-height: 1;
+  opacity: 0;
+  will-change: opacity, filter, transform;
+  animation: sp-focus 0.7s 0.25s ease forwards;
+}
+/* ── Subtitle  (matches navbar: Wedding Videography italic) ── */
+.sp-sub {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: #C4D1D4;
+  opacity: 0;
+  will-change: opacity, transform;
+  animation: sp-up 0.55s 0.75s ease forwards;
+}
+/* ── Divider line ── */
+.sp-div {
+  width: 40px; height: 1px;
+  background: rgba(196,209,212,0.45);
+  transform: scaleX(0); transform-origin: center;
+  will-change: transform;
+  animation: sp-line 0.45s 0.65s ease forwards;
+  margin: 0.25rem 0;
+}
+@keyframes sp-line { to { transform: scaleX(1); } }
+
+/* ── Location tag ── */
+.sp-loc {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 0.52rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(134,151,160,0.85);
+  opacity: 0;
+  will-change: opacity, transform;
+  animation: sp-up 0.5s 1.0s ease forwards;
+}
+
+/* ── Shared keyframes ── */
+@keyframes sp-focus {
+  from { opacity: 0; filter: blur(8px); transform: translate3d(0,6px,0); }
+  to   { opacity: 1; filter: blur(0px); transform: translate3d(0,0,0); }
+}
+@keyframes sp-up {
+  from { opacity: 0; transform: translate3d(0,10px,0); }
+  to   { opacity: 1; transform: translate3d(0,0,0); }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  #aarsh-sp { display: none !important; }
+}
+

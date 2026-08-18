@@ -26,6 +26,7 @@ interface GalleryAppProps {
   videos: any[]
   highlights: any[]
   albums: any[]
+  initialAlbumId?: string
 }
 
 type TabType = 'photos' | 'albums' | 'videos'
@@ -190,7 +191,7 @@ function Lightbox({ state, onClose }: { state: LightboxState; onClose: () => voi
 /* ─────────────────────────────────────────
    Main component
 ───────────────────────────────────────── */
-export function GalleryApp({ photos, videos, highlights, albums }: GalleryAppProps) {
+export function GalleryApp({ photos, videos, highlights, albums, initialAlbumId }: GalleryAppProps) {
   const [activeTab, setActiveTab]     = useState<TabType>('albums')
   const [openHighlight, setOpenHighlight] = useState<any | null>(null)
   const [storyIndex, setStoryIndex]   = useState(0)
@@ -217,6 +218,18 @@ export function GalleryApp({ photos, videos, highlights, albums }: GalleryAppPro
   const handleOpenAlbum = useCallback((album: any) => {
     setOpenAlbum(album)
     setAlbumBatch(ALBUM_BATCH_SIZE)
+  }, [])
+
+  // ── Auto-open album from URL query param ──
+  useEffect(() => {
+    if (!initialAlbumId || albums.length === 0) return
+    const target = albums.find((a: any) => String(a._id) === String(initialAlbumId))
+    if (target) {
+      setActiveTab('albums')
+      handleOpenAlbum(target)
+    }
+    // Only run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ── Story helpers ──

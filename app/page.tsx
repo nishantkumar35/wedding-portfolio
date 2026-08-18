@@ -1,10 +1,11 @@
 import { connectDB } from "@/lib/db";
 import { Photo } from "@/models/Photo";
+import { Album } from "@/models/Album";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import CircularGallery from "@/components/CircularGallery";
+import { AlbumShowcase } from "@/components/AlbumShowcase";
 import Image from "next/image";
 import { ContactForm } from "@/components/ContactForm";
 import { StructuredData, localBusinessSchema, faqSchema } from "@/components/StructuredData";
@@ -22,15 +23,38 @@ async function getRecentPhotos() {
   }
 }
 
-export default async function Home() {
-  const recentPhotos = await getRecentPhotos();
+async function getAlbumsWithCovers() {
+  try {
+    await connectDB();
+    const [albums, photos] = await Promise.all([
+      Album.find().sort({ createdAt: -1 }).lean(),
+      Photo.find({}, { albumId: 1, thumbnailUrl: 1, blurDataUrl: 1 }).lean(),
+    ]);
+    return albums.map((album: any) => {
+      const albumPhotos = photos.filter(
+        (p: any) => String(p.albumId) === String(album._id),
+      );
+      const firstPhoto = albumPhotos[0] as any;
+      return {
+        _id: String(album._id),
+        name: album.name,
+        slug: album.slug,
+        coverUrl: album.coverUrl || firstPhoto?.thumbnailUrl || null,
+        blurDataUrl: firstPhoto?.blurDataUrl || null,
+        photoCount: albumPhotos.length,
+      };
+    });
+  } catch (error) {
+    console.error("Failed to fetch albums:", error);
+    return [];
+  }
+}
 
-  const galleryItems = recentPhotos.map(
-    (photo: { thumbnailUrl: string; url: string; caption?: string }) => ({
-      image: photo.thumbnailUrl || photo.url,
-      text: photo.caption || "Wedding Moment",
-    }),
-  );
+export default async function Home() {
+  const [, albums] = await Promise.all([
+    getRecentPhotos(),
+    getAlbumsWithCovers(),
+  ]);
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">
@@ -239,22 +263,12 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="flex gap-4 overflow-hidden mb-10 justify-center">
-              <div
-                style={{ height: "600px", width: "100%", position: "relative" }}
-              >
-                <CircularGallery
-                  items={galleryItems}
-                  bend={0}
-                  textColor="#ffffff"
-                  borderRadius={0.06}
-                  scrollSpeed={2}
-                  scrollEase={0.05}
-                />
-              </div>
+            {/* Horizontal album scroll strip */}
+            <div className="-mx-6 mb-8">
+              <AlbumShowcase albums={albums} />
             </div>
           </div>
-          <div className="flex justify-center ">
+          <div className="flex justify-center">
             <Button
               variant="outline"
               className="rounded-none border-[#333C43] text-[#333C43] hover:bg-[#333C43] hover:text-white px-10 md:px-15 py-3 text-[15px] uppercase tracking-widest transition-colors bg-transparent h-auto"
