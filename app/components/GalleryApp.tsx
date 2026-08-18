@@ -34,8 +34,8 @@ type TabType = 'photos' | 'albums' | 'videos'
 /* ─────────────────────────────────────────
    Constants
 ───────────────────────────────────────── */
-const PHOTOS_PER_PAGE  = 12   // photos tab batch size
-const ALBUM_BATCH_SIZE = 16   // album detail batch size
+const PHOTOS_PER_PAGE       = 12   // photos tab batch size
+const ALBUM_PHOTOS_PER_PAGE = 12   // album detail page size
 
 /* ─────────────────────────────────────────
    Masonry size pattern — repeating 8-cycle
@@ -206,18 +206,18 @@ export function GalleryApp({ photos, videos, highlights, albums, initialAlbumId 
     photoPage * PHOTOS_PER_PAGE
   )
 
-  // ── Album detail: batched infinite scroll ──
-  const [albumBatch, setAlbumBatch]   = useState(ALBUM_BATCH_SIZE)
-  const visibleAlbumPhotos            = openAlbum?.photos?.slice(0, albumBatch) ?? []
-  const hasMoreAlbumPhotos            = (openAlbum?.photos?.length ?? 0) > albumBatch
-  const loadMoreAlbum                 = useCallback(() => {
-    setAlbumBatch(b => b + ALBUM_BATCH_SIZE)
-  }, [])
+  // ── Album detail: pagination ──
+  const [albumPhotoPage, setAlbumPhotoPage] = useState(1)
+  const totalAlbumPhotoPages = Math.ceil((openAlbum?.photos?.length || 0) / ALBUM_PHOTOS_PER_PAGE)
+  const pagedAlbumPhotos     = openAlbum?.photos?.slice(
+    (albumPhotoPage - 1) * ALBUM_PHOTOS_PER_PAGE,
+    albumPhotoPage * ALBUM_PHOTOS_PER_PAGE
+  ) ?? []
 
-  // Reset album batch when opening a new album
+  // Reset album photo page when opening a new album
   const handleOpenAlbum = useCallback((album: any) => {
     setOpenAlbum(album)
-    setAlbumBatch(ALBUM_BATCH_SIZE)
+    setAlbumPhotoPage(1)
   }, [])
 
   // ── Auto-open album from URL query param ──
@@ -487,9 +487,9 @@ export function GalleryApp({ photos, videos, highlights, albums, initialAlbumId 
 
           {openAlbum.photos?.length > 0 ? (
             <>
-              {/* First batch renders immediately, more loads on scroll */}
+              {/* Masonry grid of paged album photos */}
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[180px] md:auto-rows-[220px] gap-2 md:gap-3 [grid-auto-flow:dense]">
-                {visibleAlbumPhotos.map((photo: Photo, i: number) => (
+                {pagedAlbumPhotos.map((photo: Photo, i: number) => (
                   <PhotoCard
                     key={photo._id || i}
                     photo={photo}
@@ -500,16 +500,31 @@ export function GalleryApp({ photos, videos, highlights, albums, initialAlbumId 
                 ))}
               </div>
 
-              {/* Intersection Observer sentinel — auto-loads next batch */}
-              {hasMoreAlbumPhotos && (
-                <LoadMoreSentinel onVisible={loadMoreAlbum} />
-              )}
-
-              {/* "All loaded" message */}
-              {!hasMoreAlbumPhotos && openAlbum.photos.length > ALBUM_BATCH_SIZE && (
-                <p className="text-center text-[#8697A0]/50 text-xs tracking-widest uppercase mt-10">
-                  All {openAlbum.photos.length} photos loaded
-                </p>
+              {/* Pagination controls for album photos */}
+              {totalAlbumPhotoPages > 1 && (
+                <div className="flex justify-center items-center gap-4 mt-12">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={albumPhotoPage <= 1}
+                    onClick={() => { setAlbumPhotoPage(p => p - 1); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                    className="rounded-full border-[#333C43]/20 text-[#333C43] hover:bg-[#333C43] hover:text-white disabled:opacity-30"
+                  >
+                    <ChevronLeft className="w-4 h-4 mr-1" /> Prev
+                  </Button>
+                  <span className="text-sm text-[#333C43]/50 font-medium tabular-nums">
+                    {albumPhotoPage} / {totalAlbumPhotoPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={albumPhotoPage >= totalAlbumPhotoPages}
+                    onClick={() => { setAlbumPhotoPage(p => p + 1); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                    className="rounded-full border-[#333C43]/20 text-[#333C43] hover:bg-[#333C43] hover:text-white disabled:opacity-30"
+                  >
+                    Next <ChevronRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </div>
               )}
             </>
           ) : (
