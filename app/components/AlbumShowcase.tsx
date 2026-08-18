@@ -1,13 +1,18 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { FolderOpen, Images, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react'
+import Link from 'next/link'
+import { FolderOpen, Images, ChevronLeft, ChevronRight, ArrowRight, Loader2 } from 'lucide-react'
 
 /* ─────────────────────────────────────────
    Types
 ───────────────────────────────────────── */
+interface PreviewPhoto {
+  thumbnailUrl: string
+  blurDataUrl?: string
+}
+
 interface Album {
   _id: string
   name: string
@@ -16,159 +21,161 @@ interface Album {
   photoCount?: number
   thumbnailUrl?: string
   blurDataUrl?: string
+  previewPhotos?: PreviewPhoto[]
 }
 
 interface AlbumShowcaseProps {
   albums: Album[]
 }
 
-const ALBUMS_PER_PAGE = 6
-
 /* ─────────────────────────────────────────
-   Single Album Card — premium glassmorphism
+   Single Album Card Frame
+   — 4 image grid inside a frame container
+   — Data below 4 images (Name, Photo count, View Full Album link)
 ───────────────────────────────────────── */
-function AlbumCard({ album, onClick }: { album: Album; onClick: () => void }) {
-  const cover = album.coverUrl || album.thumbnailUrl || null
+function AlbumCardFrame({ album }: { album: Album }) {
+  const [isNavigating, setIsNavigating] = useState(false)
+
+  // Build array of 4 preview photo URLs
+  const previewList = album.previewPhotos?.map(p => p.thumbnailUrl) || []
+  const fallbackCover = album.coverUrl || album.thumbnailUrl || null
+
+  // Ensure exactly 4 slots for the 2x2 grid
+  const fourSlots = Array.from({ length: 4 }).map((_, i) => {
+    if (previewList[i]) return previewList[i]
+    if (fallbackCover) return fallbackCover
+    return null
+  })
 
   return (
-    <button
-      onClick={onClick}
-      className="group relative rounded-2xl overflow-hidden w-full aspect-[4/3] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5"
-      aria-label={`Open album: ${album.name}`}
-    >
-      {/* Background image */}
-      <div className="absolute inset-0">
-        {cover ? (
-          <Image
-            src={cover}
-            alt={album.name}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            placeholder={album.blurDataUrl ? 'blur' : 'empty'}
-            blurDataURL={album.blurDataUrl}
-            loading="lazy"
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-        ) : (
-          <div className="w-full h-full grid grid-cols-2 gap-0.5 bg-[#2D3539]">
-            {[0, 1, 2, 3].map(n => (
-              <div key={n} className="bg-[#3A4448] flex items-center justify-center">
-                <FolderOpen className="w-7 h-7 text-white/10" />
+    <div className="group relative w-[280px] sm:w-[320px] shrink-0 bg-white border border-[#333C43]/10 rounded-2xl p-4 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between">
+      {/* Top section: 2x2 Grid of 4 images */}
+      <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-[#E8E4DF] p-1.5 grid grid-cols-2 gap-1.5">
+        {fourSlots.map((photoUrl, idx) => (
+          <div key={idx} className="relative w-full h-full overflow-hidden bg-[#D8D3CE] rounded-lg">
+            {photoUrl ? (
+              <Image
+                src={photoUrl}
+                alt={`${album.name} preview ${idx + 1}`}
+                fill
+                sizes="(max-width: 640px) 140px, 160px"
+                loading="lazy"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-[#E3E8EA]">
+                <FolderOpen className="w-5 h-5 text-[#333C43]/20" />
               </div>
-            ))}
+            )}
+          </div>
+        ))}
+
+        {/* Loading Overlay on click for instant feedback */}
+        {isNavigating && (
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center z-20 transition-opacity">
+            <Loader2 className="w-8 h-8 text-white animate-spin mb-1.5" />
+            <span className="text-white text-xs font-semibold tracking-wide">Opening Album...</span>
           </div>
         )}
       </div>
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/5 group-hover:from-black/90 group-hover:via-black/35 transition-all duration-500" />
-
-      {/* Shine sweep on hover */}
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-        style={{ background: 'linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.07) 50%, transparent 70%)' }}
-      />
-
-      {/* Photo count badge */}
-      {album.photoCount !== undefined && album.photoCount > 0 && (
-        <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 bg-black/40 backdrop-blur-md rounded-full px-3 py-1.5 border border-white/10 z-10">
-          <Images className="w-3 h-3 text-white/70" />
-          <span className="text-white/85 text-[10px] font-semibold tabular-nums tracking-wide">
-            {album.photoCount}
-          </span>
+      {/* Bottom section: Album Name, Photo Count & View Full Album link */}
+      <div className="mt-4 flex flex-col gap-2">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="font-serif text-[#333C43] font-bold text-base sm:text-lg leading-snug line-clamp-1 group-hover:text-[#8697A0] transition-colors">
+            {album.name}
+          </h3>
+          {album.photoCount !== undefined && album.photoCount > 0 && (
+            <span className="flex items-center gap-1 text-[11px] font-semibold text-[#8697A0] bg-[#333C43]/5 px-2 py-0.5 rounded-full shrink-0 border border-[#333C43]/10">
+              <Images className="w-3 h-3 text-[#8697A0]" />
+              {album.photoCount}
+            </span>
+          )}
         </div>
-      )}
 
-      {/* Bottom info */}
-      <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
-        <div className="flex items-end justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <h3 className="font-serif text-white text-lg font-bold leading-snug truncate group-hover:text-white/95 transition-colors">
-              {album.name}
-            </h3>
-            <p className="text-white/45 text-[11px] mt-1 tracking-widest uppercase font-medium group-hover:text-white/65 transition-colors">
-              View Album
-            </p>
-          </div>
-          {/* Arrow button */}
-          <div className="flex-shrink-0 w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-300">
-            <ArrowUpRight className="w-4 h-4 text-white group-hover:text-[#333C43] transition-colors duration-300" />
-          </div>
-        </div>
+        <Link
+          href={`/gallery?album=${album._id}`}
+          prefetch={true}
+          onClick={() => setIsNavigating(true)}
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#333C43] hover:text-[#8697A0] transition-colors mt-0.5 tracking-wide group-hover:translate-x-1 transition-transform"
+        >
+          <span>View Full Album</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
-    </button>
-  )
-}
-
-/* ─────────────────────────────────────────
-   Pagination Controls
-───────────────────────────────────────── */
-function PaginationControls({
-  currentPage,
-  totalPages,
-  onPrev,
-  onNext,
-}: {
-  currentPage: number
-  totalPages: number
-  onPrev: () => void
-  onNext: () => void
-}) {
-  return (
-    <div className="flex items-center justify-center gap-5 mt-10">
-      <button
-        onClick={onPrev}
-        disabled={currentPage <= 1}
-        aria-label="Previous page"
-        className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold border border-[#333C43]/30 text-[#333C43] hover:bg-[#333C43] hover:text-white hover:border-[#333C43] disabled:opacity-25 disabled:pointer-events-none transition-all duration-200"
-      >
-        <ChevronLeft className="w-4 h-4" />
-        Prev
-      </button>
-
-      {/* Page dots */}
-      <div className="flex items-center gap-2">
-        {Array.from({ length: totalPages }).map((_, i) => (
-          <span
-            key={i}
-            className={`rounded-full transition-all duration-300 ${
-              i + 1 === currentPage
-                ? 'w-6 h-2.5 bg-[#333C43]'
-                : 'w-2.5 h-2.5 bg-[#333C43]/20'
-            }`}
-          />
-        ))}
-      </div>
-
-      <button
-        onClick={onNext}
-        disabled={currentPage >= totalPages}
-        aria-label="Next page"
-        className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold border border-[#333C43]/30 text-[#333C43] hover:bg-[#333C43] hover:text-white hover:border-[#333C43] disabled:opacity-25 disabled:pointer-events-none transition-all duration-200"
-      >
-        Next
-        <ChevronRight className="w-4 h-4" />
-      </button>
     </div>
   )
 }
 
 /* ─────────────────────────────────────────
    Main AlbumShowcase
+   — Moving animation on X-axis (auto continuous horizontal scrolling marquee)
+   — Drag to scroll & Prev/Next button controls
 ───────────────────────────────────────── */
 export function AlbumShowcase({ albums }: AlbumShowcaseProps) {
-  const router = useRouter()
-  const [page, setPage] = useState(1)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [isPaused, setIsPaused] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStartX = useRef(0)
+  const dragScrollLeft = useRef(0)
+  const rafRef = useRef<number | null>(null)
+  const SPEED = 0.75 // Continuous speed along X-axis
 
-  const totalPages = Math.max(1, Math.ceil(albums.length / ALBUMS_PER_PAGE))
-  const pagedAlbums = albums.slice((page - 1) * ALBUMS_PER_PAGE, page * ALBUMS_PER_PAGE)
+  /* ── Continuous X-axis movement via requestAnimationFrame ── */
+  useEffect(() => {
+    const el = trackRef.current
+    if (!el || albums.length === 0) return
 
-  const handleAlbumClick = useCallback(
-    (albumId: string) => {
-      router.push(`/gallery?album=${albumId}`)
-    },
-    [router],
-  )
+    const tick = () => {
+      if (!isPaused && !isDragging && el) {
+        el.scrollLeft += SPEED
+        // Seamless loop: when scrolled halfway through doubled content, reset to start
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft = 0
+        }
+      }
+      rafRef.current = requestAnimationFrame(tick)
+    }
+
+    rafRef.current = requestAnimationFrame(tick)
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
+  }, [isPaused, isDragging, albums.length])
+
+  /* ── Mouse Drag to Scroll ── */
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (!trackRef.current) return
+    setIsDragging(false)
+    dragStartX.current = e.pageX - trackRef.current.offsetLeft
+    dragScrollLeft.current = trackRef.current.scrollLeft
+    trackRef.current.style.cursor = 'grabbing'
+  }
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!trackRef.current) return
+    if (e.buttons !== 1) return
+    const x = e.pageX - trackRef.current.offsetLeft
+    const walk = (x - dragStartX.current) * 1.2
+    if (Math.abs(walk) > 4) setIsDragging(true)
+    trackRef.current.scrollLeft = dragScrollLeft.current - walk
+  }
+
+  const onMouseUp = () => {
+    if (trackRef.current) trackRef.current.style.cursor = 'grab'
+    setTimeout(() => setIsDragging(false), 50)
+  }
+
+  /* ── Manual Nav Buttons ── */
+  const scrollLeftBtn = useCallback(() => {
+    if (!trackRef.current) return
+    trackRef.current.scrollBy({ left: -340, behavior: 'smooth' })
+  }, [])
+
+  const scrollRightBtn = useCallback(() => {
+    if (!trackRef.current) return
+    trackRef.current.scrollBy({ left: 340, behavior: 'smooth' })
+  }, [])
 
   /* ── Empty state ── */
   if (albums.length === 0) {
@@ -182,28 +189,60 @@ export function AlbumShowcase({ albums }: AlbumShowcaseProps) {
     )
   }
 
+  // Duplicate list for seamless infinite loop on X-axis
+  const doubledAlbums = albums.length > 2 ? [...albums, ...albums] : albums
+
   return (
-    <div className="w-full">
-      {/* Responsive grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        {pagedAlbums.map((album) => (
-          <AlbumCard
-            key={album._id}
-            album={album}
-            onClick={() => handleAlbumClick(album._id)}
-          />
+    <div className="relative w-full group/container">
+      {/* Prev / Next buttons */}
+      <button
+        onClick={scrollLeftBtn}
+        aria-label="Scroll left"
+        className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/90 shadow-lg border border-[#333C43]/15 flex items-center justify-center text-[#333C43] hover:bg-[#333C43] hover:text-white transition-all duration-300 opacity-80 hover:opacity-100 focus:outline-none"
+      >
+        <ChevronLeft className="w-5 h-5" />
+      </button>
+
+      <button
+        onClick={scrollRightBtn}
+        aria-label="Scroll right"
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/90 shadow-lg border border-[#333C43]/15 flex items-center justify-center text-[#333C43] hover:bg-[#333C43] hover:text-white transition-all duration-300 opacity-80 hover:opacity-100 focus:outline-none"
+      >
+        <ChevronRight className="w-5 h-5" />
+      </button>
+
+      {/* Left/Right Edge Gradient Fades */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-12 md:w-20 z-10 bg-gradient-to-r from-[#C4D1D4] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-12 md:w-20 z-10 bg-gradient-to-l from-[#C4D1D4] to-transparent" />
+
+      {/* X-Axis Moving Track */}
+      <div
+        ref={trackRef}
+        role="list"
+        aria-label="Wedding albums showcase"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => { setIsPaused(false); onMouseUp() }}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        className="
+          flex gap-6 overflow-x-auto py-6 px-10
+          cursor-grab active:cursor-grabbing
+          scrollbar-hide select-none
+        "
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {doubledAlbums.map((album, i) => (
+          <div key={`${album._id}-${i}`} role="listitem">
+            <AlbumCardFrame album={album} />
+          </div>
         ))}
       </div>
 
-      {/* Pagination — only when more than one page */}
-      {totalPages > 1 && (
-        <PaginationControls
-          currentPage={page}
-          totalPages={totalPages}
-          onPrev={() => setPage(p => Math.max(1, p - 1))}
-          onNext={() => setPage(p => Math.min(totalPages, p + 1))}
-        />
-      )}
+      {/* Hide scrollbar for WebKit */}
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+      `}</style>
     </div>
   )
 }

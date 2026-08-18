@@ -35,6 +35,10 @@ async function getAlbumsWithCovers() {
         (p: any) => String(p.albumId) === String(album._id),
       );
       const firstPhoto = albumPhotos[0] as any;
+      const previewPhotos = albumPhotos.slice(0, 4).map((p: any) => ({
+        thumbnailUrl: p.thumbnailUrl,
+        blurDataUrl: p.blurDataUrl,
+      }));
       return {
         _id: String(album._id),
         name: album.name,
@@ -42,6 +46,7 @@ async function getAlbumsWithCovers() {
         coverUrl: album.coverUrl || firstPhoto?.thumbnailUrl || null,
         blurDataUrl: firstPhoto?.blurDataUrl || null,
         photoCount: albumPhotos.length,
+        previewPhotos,
       };
     });
   } catch (error) {
