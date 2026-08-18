@@ -33,7 +33,7 @@ interface AlbumShowcaseProps {
    — 4 image grid inside a frame container
    — Data below 4 images (Name, Photo count, View Full Album link)
 ───────────────────────────────────────── */
-function AlbumCardFrame({ album }: { album: Album }) {
+function AlbumCardFrame({ album, isDragging }: { album: Album; isDragging: boolean }) {
   const [isNavigating, setIsNavigating] = useState(false)
 
   // Build array of 4 preview photo URLs
@@ -47,8 +47,22 @@ function AlbumCardFrame({ album }: { album: Album }) {
     return null
   })
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (isDragging) {
+      e.preventDefault()
+      return
+    }
+    setIsNavigating(true)
+  }
+
   return (
-    <div className="group relative w-[280px] sm:w-[320px] shrink-0 bg-white border border-[#333C43]/10 rounded-2xl p-4 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between">
+    <Link
+      href={`/gallery?album=${album._id}`}
+      prefetch={true}
+      onClick={handleClick}
+      aria-label={`Open album ${album.name}`}
+      className="group relative w-[280px] sm:w-[320px] shrink-0 bg-white border border-[#333C43]/10 rounded-2xl p-4 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between block cursor-pointer select-none"
+    >
       {/* Top section: 2x2 Grid of 4 images */}
       <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-[#E8E4DF] p-1.5 grid grid-cols-2 gap-1.5">
         {fourSlots.map((photoUrl, idx) => (
@@ -93,17 +107,12 @@ function AlbumCardFrame({ album }: { album: Album }) {
           )}
         </div>
 
-        <Link
-          href={`/gallery?album=${album._id}`}
-          prefetch={true}
-          onClick={() => setIsNavigating(true)}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#333C43] hover:text-[#8697A0] transition-colors mt-0.5 tracking-wide group-hover:translate-x-1 transition-transform"
-        >
+        <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#333C43] group-hover:text-[#8697A0] transition-colors mt-0.5 tracking-wide group-hover:translate-x-1 transition-transform">
           <span>View Full Album</span>
           <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
+        </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
@@ -234,7 +243,7 @@ export function AlbumShowcase({ albums }: AlbumShowcaseProps) {
       >
         {doubledAlbums.map((album, i) => (
           <div key={`${album._id}-${i}`} role="listitem">
-            <AlbumCardFrame album={album} />
+            <AlbumCardFrame album={album} isDragging={isDragging} />
           </div>
         ))}
       </div>
