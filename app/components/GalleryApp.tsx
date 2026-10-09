@@ -472,9 +472,9 @@ export function GalleryApp({ photos, videos, highlights, albums, initialAlbumId 
         <div>
           <button
             onClick={() => setOpenAlbum(null)}
-            className="flex items-center gap-2 text-sm text-[#8697A0] hover:text-[#333C43] transition-colors mb-8 group"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#333C43]/20 text-[#333C43] text-xs font-semibold tracking-widest uppercase bg-white hover:bg-[#333C43] hover:text-white hover:border-[#333C43] shadow-sm transition-all duration-300 group mb-8"
           >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" />
             Back to Albums
           </button>
 

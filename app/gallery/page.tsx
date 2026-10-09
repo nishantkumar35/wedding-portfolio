@@ -9,10 +9,45 @@ import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import Link from 'next/link'
 import { Metadata } from 'next'
+import { ArrowLeft } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Wedding Photography & Videography Gallery | Aarsh Wedding Videography',
-  description: 'Explore our portfolio of cinematic wedding films, pre-wedding shoots, and beautiful wedding photography by Aarsh Wedding Videography in Begusarai, Bihar.',
+  description:
+    'Browse our portfolio of cinematic wedding films, pre-wedding shoots, candid wedding photography, and drone videography by Aarsh Wedding Videography – the best wedding photographer & videographer in Begusarai, Bihar.',
+  keywords: [
+    'wedding photography gallery Begusarai',
+    'wedding videography portfolio Bihar',
+    'best wedding photographer in Begusarai',
+    'cinematic wedding films Begusarai',
+    'pre wedding shoot gallery Bihar',
+    'candid wedding photographer Begusarai',
+    'drone wedding videography Bihar',
+    'wedding photo album Begusarai',
+    'wedding highlights Begusarai',
+    'Aarsh Wedding Videography portfolio',
+  ],
+  openGraph: {
+    type: 'website',
+    title: 'Wedding Photography & Videography Gallery | Aarsh Wedding Videography',
+    description:
+      'Browse our portfolio of cinematic wedding films, pre-wedding shoots, candid wedding photography, and drone videography by Aarsh Wedding Videography in Begusarai, Bihar.',
+    images: [
+      {
+        url: '/assets/hero.jpeg',
+        width: 1200,
+        height: 630,
+        alt: 'Wedding Photography & Videography Gallery – Aarsh Wedding Videography Begusarai',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Wedding Photography & Videography Gallery | Aarsh Wedding Videography',
+    description:
+      'Browse our portfolio of cinematic wedding films, pre-wedding shoots, candid wedding photography, and drone videography by Aarsh Wedding Videography in Begusarai, Bihar.',
+    images: ['/assets/hero.jpeg'],
+  },
 }
 
 export const revalidate = 60
@@ -55,8 +90,18 @@ export default async function GalleryPage({
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">
-      <Link href="/" className="block py-4 px-6 bg-[#333C43] text-white text-sm uppercase tracking-wide font-medium" aria-label="Back to Aarsh Wedding Videography Home">Back to Home</Link>
-      <main className="pt-8 pb-20">
+      {/* Back to Home button */}
+      <div className="px-6 pt-5 pb-2">
+        <Link
+          href="/"
+          aria-label="Back to Aarsh Wedding Videography Home"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#333C43]/20 text-[#333C43] text-xs font-semibold tracking-widest uppercase bg-white hover:bg-[#333C43] hover:text-white hover:border-[#333C43] shadow-sm transition-all duration-300 group"
+        >
+          <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" />
+          Back to Home
+        </Link>
+      </div>
+      <main className="pt-6 pb-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
           <h1 className="sr-only">Aarsh Wedding Photography & Videography Portfolio Gallery</h1>
           <Suspense fallback={

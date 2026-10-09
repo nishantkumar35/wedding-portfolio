@@ -77,7 +77,7 @@ export default async function Home() {
           <div className="container mx-auto max-w-7xl flex flex-col md:flex-row items-center gap-12 md:gap-20 relative z-10">
             <div className="w-full md:w-1/2 aspect-[4/5] bg-[#C4D1D4] rounded-tl-[60px] rounded-br-[60px] rounded-tr-xl rounded-bl-xl overflow-hidden relative shadow-md">
               <Image
-                src="/assets/hero.jpeg"
+                src="/assets/hero.webp"
                 alt="Aarsh Wedding Videography - Best Wedding Videographer in Begusarai"
                 className="w-full h-full object-cover rounded-[inherit]"
                 fill
